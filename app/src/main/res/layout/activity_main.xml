@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/header"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="55dp"
+                android:layout_height="33dp"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_launcher" />
+
+            <RadioGroup
+                android:id="@+id/radiogroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_home"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/radiobutton_background"
+                    android:button="@null"
+                    android:drawableTop="@drawable/sk_select"
+                    android:drawablePadding="3dp"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="收款"
+                    android:textColor="@drawable/main_bottom_tv_text_color"
+                    android:textSize="10sp" />
+
+                <RadioButton
+                    android:id="@+id/rb_invest"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/radiobutton_background"
+                    android:button="@null"
+                    android:checked="false"
+                    android:drawableTop="@drawable/hy_unselect"
+                    android:drawablePadding="3dp"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="会员"
+                    android:textColor="@drawable/main_bottom_tv_text_color"
+                    android:textSize="10dp" />
+
+                <RadioButton
+                    android:id="@+id/rb_more"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/radiobutton_background"
+                    android:button="@null"
+                    android:checked="false"
+                    android:drawableTop="@drawable/me_selector"
+                    android:drawablePadding="3dp"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="数据"
+                    android:textColor="@drawable/main_bottom_tv_text_color"
+                    android:textSize="10dp" />
+
+                <RadioButton
+                    android:id="@+id/rb_message"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/radiobutton_background"
+                    android:button="@null"
+                    android:checked="false"
+                    android:drawableTop="@drawable/more_selector"
+                    android:drawablePadding="3dp"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="设置"
+                    android:textColor="@drawable/main_bottom_tv_text_color"
+                    android:textSize="10dp" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="556465654" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/framelayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/white" />
+    </LinearLayout>
+
+</LinearLayout>
