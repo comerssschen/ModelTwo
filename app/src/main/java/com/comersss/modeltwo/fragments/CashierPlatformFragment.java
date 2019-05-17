@@ -90,12 +90,12 @@ public class CashierPlatformFragment extends BaseFragment {
         unbinder = ButterKnife.bind(this, mChildContentView);
         EditTextUtils.setPriceEditText(paymoneyEdit);
         authInfo = new AuthInfo();
-        WxPayFace.getInstance().initWxpayface(getActivity(), new IWxPayfaceCallback() {
-            public void response(Map paramMap) throws RemoteException {
-                d(TAG, "response | initWxpayface " + paramMap);
-                getAuthInfo();
-            }
-        });
+//        WxPayFace.getInstance().initWxpayface(getActivity(), new IWxPayfaceCallback() {
+//            public void response(Map paramMap) throws RemoteException {
+//                d(TAG, "response | initWxpayface " + paramMap);
+//                getAuthInfo();
+//            }
+//        });
     }
 
     public void getAuthInfo() {
