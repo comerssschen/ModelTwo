@@ -14,6 +14,11 @@
             android:name="design_height_in_dp"
             android:value="384" />
         <activity android:name=".MainActivity">
+
+        </activity>
+
+        <activity android:name=".LoginActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

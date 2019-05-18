@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.KeyboardUtils;
+import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.comersss.modeltwo.AuthInfo;
 import com.comersss.modeltwo.EditTextUtils;
@@ -345,7 +346,7 @@ public class CashierPlatformFragment extends BaseFragment {
 
     private boolean verifyMoney() {
         paymoney = paymoneyEdit.getText().toString().trim();
-        if (TextUtils.equals(paymoney, "0") || TextUtils.equals(paymoney, "0.") || TextUtils.equals(paymoney, "0.0") || TextUtils.equals(paymoney, "0.00")) {
+        if (ObjectUtils.isEmpty(paymoney) || TextUtils.equals(paymoney, "0") || TextUtils.equals(paymoney, "0.") || TextUtils.equals(paymoney, "0.0") || TextUtils.equals(paymoney, "0.00")) {
             ToastUtils.showShort("请输入有效金额");
             return false;
         } else if (Double.parseDouble(paymoney) > 100000) {
