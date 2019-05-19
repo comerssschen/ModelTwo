@@ -29,6 +29,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.comersss.modeltwo.fragments.BossFragment;
 import com.comersss.modeltwo.fragments.CashierPlatformFragment;
@@ -55,7 +56,7 @@ import javax.crypto.spec.DESKeySpec;
  * 邮箱：904359289@QQ.com.
  *
  * */
-public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
+public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
     public AppContext appContext;
     RadioGroup radiogroup;
     private ArrayList<Fragment> fragments;
@@ -84,6 +85,16 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         setDefaultFragment(fragments.get(0));
         radiogroup.setOnCheckedChangeListener(this);
         radiogroup.check(R.id.rb_home);
+
+
+        ImageView ivLoginOut = findViewById(R.id.iv_login_out);
+        ivLoginOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SPUtils.getInstance().clear();
+                finish();
+            }
+        });
 
     }
 

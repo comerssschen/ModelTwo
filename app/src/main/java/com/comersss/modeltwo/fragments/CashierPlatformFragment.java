@@ -281,6 +281,7 @@ public class CashierPlatformFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        WxPayFace.getInstance().releaseWxpayface(getActivity());
     }
 
     @OnClick({R.id.tv_member, R.id.tv_refund, R.id.ll_scan, R.id.ll_truemoney, R.id.ll_qrcode, R.id.ll_bankcard, R.id.soft_keyboard_btn_1, R.id.soft_keyboard_btn_2, R.id.soft_keyboard_btn_3, R.id.soft_keyboard_btn_4, R.id.soft_keyboard_btn_5, R.id.soft_keyboard_btn_6, R.id.soft_keyboard_btn_7, R.id.soft_keyboard_btn_8, R.id.soft_keyboard_btn_9, R.id.tv_point, R.id.soft_keyboard_btn_0, R.id.rl_delete})
