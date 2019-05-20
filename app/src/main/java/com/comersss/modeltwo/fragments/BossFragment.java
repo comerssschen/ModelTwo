@@ -14,12 +14,11 @@ import com.comersss.modeltwo.R;
  * 老板赚钱
  * Created by cc on 2016/7/27.
  */
-public class BossFragment extends BaseFragment  {
+public class BossFragment extends BaseFragment {
 
     @Override
     protected View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_boss, container, false);
-
+        return inflater.inflate(R.layout.fragment_boss, container, false);
     }
 
     @Override

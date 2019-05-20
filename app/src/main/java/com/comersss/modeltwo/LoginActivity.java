@@ -2,9 +2,7 @@ package com.comersss.modeltwo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -12,12 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.comersss.modeltwo.bean.ArgGetAuthInfo;
 import com.comersss.modeltwo.bean.ResultLogin;
 import com.comersss.modeltwo.view.LoadingDialog;
 import com.google.gson.Gson;
@@ -80,7 +76,7 @@ public class LoginActivity extends BaseActivity {
 
             }
         });
-        loadingDialog = new LoadingDialog(LoginActivity.this,"登录中。。。");
+        loadingDialog = new LoadingDialog(LoginActivity.this, "登录中。。。");
     }
 
     public void Login(View view) {

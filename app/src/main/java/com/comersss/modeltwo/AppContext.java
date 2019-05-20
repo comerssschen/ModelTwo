@@ -4,8 +4,8 @@ import android.app.Application;
 
 
 /*
-* Application 应用程序
-* */
+ * Application 应用程序
+ * */
 public class AppContext extends Application {
 
     @Override

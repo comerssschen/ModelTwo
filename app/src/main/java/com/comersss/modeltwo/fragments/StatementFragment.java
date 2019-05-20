@@ -1,6 +1,5 @@
 package com.comersss.modeltwo.fragments;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,11 +10,10 @@ import android.view.ViewGroup;
 import com.comersss.modeltwo.R;
 
 /*
-* 账单fragment
-* Created by cc on 2016/7/27.
-* */
+ * 账单fragment
+ * Created by cc on 2016/7/27.
+ * */
 public class StatementFragment extends BaseFragment {
-
 
 
     @Override

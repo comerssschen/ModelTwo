@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 import com.comersss.modeltwo.R;
 
 /*
-* 接收消息的fragment
-* Created by cc on 2016/7/27.
-* */
+ * 接收消息的fragment
+ * Created by cc on 2016/7/27.
+ * */
 public class MessageFragment extends BaseFragment {
 
     @Override
