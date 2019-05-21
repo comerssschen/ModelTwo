@@ -32,12 +32,12 @@ public class CountDownConfrimHelper {
             @Override
             public void onTick(long time) {
                 int second = (int) ((time + 15) / 1000);
-                textView.setText("立即结束(" + second + "s)");
+                textView.setText(second + "s后自动跳转");
             }
 
             @Override
             public void onFinish() {
-                textView.setText("立即结束");
+                textView.setText(tip);
                 if (listener != null) {
                     listener.fin();
                 }

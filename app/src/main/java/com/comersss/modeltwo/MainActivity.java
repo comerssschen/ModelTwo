@@ -12,6 +12,7 @@ import com.comersss.modeltwo.fragments.BossFragment;
 import com.comersss.modeltwo.fragments.CashierPlatformFragment;
 import com.comersss.modeltwo.fragments.MessageFragment;
 import com.comersss.modeltwo.fragments.StatementFragment;
+import com.comersss.modeltwo.view.BackPressDialog;
 
 import java.util.ArrayList;
 
@@ -29,6 +30,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     private StatementFragment statementFragment;
     private MessageFragment messageFragment;
     private BossFragment bossFragment;
+    private BackPressDialog backPressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +53,6 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         radiogroup.setOnCheckedChangeListener(this);
         radiogroup.check(R.id.rb_home);
 
-
         ImageView ivLoginOut = findViewById(R.id.iv_login_out);
         ivLoginOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +64,17 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     }
 
+    @Override
+    public void onBackPressed() {
+        backPressDialog = new BackPressDialog(MainActivity.this);
+        backPressDialog.setOnOkClickListener(new BackPressDialog.OnOkClickListener() {
+            @Override
+            public void onOkClick() {
+                finish();
+            }
+        });
+        backPressDialog.show();
+    }
 
     //当页面重新进入主界面读取用户信息
     @Override

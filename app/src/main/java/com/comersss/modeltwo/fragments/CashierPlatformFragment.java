@@ -1,7 +1,9 @@
 package com.comersss.modeltwo.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.os.RemoteException;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -12,15 +14,23 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blankj.utilcode.util.ObjectUtils;
+import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.SpanUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.comersss.modeltwo.AuthInfo;
 import com.comersss.modeltwo.EditTextUtils;
+import com.comersss.modeltwo.MainActivity;
 import com.comersss.modeltwo.R;
 import com.comersss.modeltwo.bean.ArgGetAuthInfo;
 import com.comersss.modeltwo.bean.ResultFacePay;
 import com.comersss.modeltwo.bean.ResultGetOrder;
+import com.comersss.modeltwo.view.ChoseMemberDialog;
+import com.comersss.modeltwo.view.PayMoneyDialog;
+import com.comersss.modeltwo.view.RefundDialog;
+import com.comersss.modeltwo.view.SucessDialog;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -38,6 +48,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static android.util.Log.d;
+import static android.util.Log.e;
 import static com.lzy.okgo.utils.HttpUtils.runOnUiThread;
 
 /**
@@ -55,27 +66,28 @@ public class CashierPlatformFragment extends BaseFragment {
     TextView tvRefund;
     @BindView(R.id.ll_scan)
     LinearLayout llScan;
-    @BindView(R.id.ll_truemoney)
-    LinearLayout llTruemoney;
     @BindView(R.id.ll_qrcode)
     LinearLayout llQrcode;
-    @BindView(R.id.ll_bankcard)
-    LinearLayout llBankcard;
     Unbinder unbinder;
     private String paymoney;
-    private String localhostUrl = "http://api.test.360yunpay.com";
+    private String localhostUrl = "http://api.pay.360yunpay.com";
     private String money;
     private AuthInfo authInfo;
     private String appid = "wx2b975c0ca94a6154";
     private String mch_id = "1440771702";
     private String sub_mch_id = "1531015161";
     private HashMap localHashMap;
+    private SPUtils spUtils;
+    private SucessDialog sucessDialog;
+    private View cashFragmentView;
+    private PayMoneyDialog payMoneyDialog;
 
 
     @Override
     protected View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(TAG, "createView");
-        return inflater.inflate(R.layout.fragment_cashier_platform, container, false);
+        cashFragmentView = inflater.inflate(R.layout.fragment_cashier_platform, container, false);
+        return cashFragmentView;
     }
 
     //初始化界面
@@ -90,6 +102,7 @@ public class CashierPlatformFragment extends BaseFragment {
 //                getAuthInfo();
 //            }
 //        });
+        spUtils = SPUtils.getInstance();
     }
 
     public void getAuthInfo() {
@@ -102,6 +115,7 @@ public class CashierPlatformFragment extends BaseFragment {
                 Log.i("test", "map = " + map);
                 OkGo.<String>post(localhostUrl + "/api/FacePayApi/WechatFaceAuth")
                         .upJson(new Gson().toJson(map))
+                        .headers("Authorization", spUtils.getString("token", ""))
                         .execute(new StringCallback() {
                             @Override
                             public void onSuccess(Response<String> response) {
@@ -110,7 +124,6 @@ public class CashierPlatformFragment extends BaseFragment {
                                     Log.i("test", "getAuthInfo :" + body);
                                     ArgGetAuthInfo result = new Gson().fromJson(body, ArgGetAuthInfo.class);
                                     if (result.isSuccess()) {
-
                                         authInfo.setAuthinfo(result.getData().getAuthinfo());
                                         authInfo.setExpire_time(System.currentTimeMillis());
                                         //开启一个子线程，定时刷新
@@ -156,6 +169,7 @@ public class CashierPlatformFragment extends BaseFragment {
         map.put("data", "10");
         OkGo.<String>post(localhostUrl + "/api/FacePayApi/GenerateOrderNum")
                 .upJson(new Gson().toJson(map))
+                .headers("Authorization", spUtils.getString("token", ""))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -164,6 +178,8 @@ public class CashierPlatformFragment extends BaseFragment {
                             ResultGetOrder resultGetOrder = new Gson().fromJson(body, ResultGetOrder.class);
                             if (resultGetOrder.isSuccess()) {
                                 wxPay(resultGetOrder.getData());
+                            } else {
+                                ToastUtils.showShort(resultGetOrder.getMessage());
                             }
                             Log.i("test", "getAuthInfo :" + body);
 
@@ -206,60 +222,73 @@ public class CashierPlatformFragment extends BaseFragment {
             public void response(final Map paramMap) throws RemoteException {
                 d(TAG, "response | getWxpayfaceCode " + paramMap);
                 final String code = paramMap.get("return_code").toString();
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        if (TextUtils.equals(code, "SUCCESS")) {
-                            Map<String, String> map = new HashMap<>();
-                            map.put("data1", "10");
-                            map.put("data2", money);
-                            map.put("data3", outTratNum);
-                            map.put("data4", paramMap.get("openid").toString().trim());
-                            map.put("data5", paramMap.get("face_code").toString().trim());
-                            OkGo.<String>post(localhostUrl + "/api/FacePayApi/WechatFacePay")
-                                    .upJson(new Gson().toJson(map))
-                                    .execute(new StringCallback() {
-                                        @Override
-                                        public void onSuccess(Response<String> response) {
-                                            Log.i("test", "response.body() = " + response.body());
-                                            try {
-                                                ResultFacePay resultFacePay = new Gson().fromJson(response.body(), ResultFacePay.class);
-                                                if (resultFacePay.isSuccess()) {
-
-                                                    WxPayFace.getInstance().updateWxpayfacePayResult(localHashMap, new IWxPayfaceCallback() {
-                                                        public void response(Map paramMap) throws RemoteException {
-                                                            d(TAG, "paramMap" + paramMap);
-                                                            ToastUtils.showShort("支付成功");
-                                                        }
-                                                    });
-                                                } else {
-                                                    ToastUtils.showShort(resultFacePay.getMessage());
+                if (TextUtils.equals(code, "SUCCESS")) {
+                    Map<String, String> map = new HashMap<>();
+                    map.put("data1", "10");
+                    map.put("data2", money);
+                    map.put("data3", outTratNum);
+                    map.put("data4", paramMap.get("openid").toString().trim());
+                    map.put("data5", paramMap.get("face_code").toString().trim());
+                    OkGo.<String>post(localhostUrl + "/api/FacePayApi/WechatFacePay")
+                            .upJson(new Gson().toJson(map))
+                            .headers("Authorization", spUtils.getString("token", ""))
+                            .execute(new StringCallback() {
+                                @Override
+                                public void onSuccess(Response<String> response) {
+                                    Log.i("test", "response.body() = " + response.body());
+                                    try {
+                                        ResultFacePay resultFacePay = new Gson().fromJson(response.body(), ResultFacePay.class);
+                                        if (resultFacePay.isSuccess()) {
+                                            WxPayFace.getInstance().updateWxpayfacePayResult(localHashMap, new IWxPayfaceCallback() {
+                                                public void response(Map paramMap) throws RemoteException {
+                                                    d(TAG, "paramMap" + paramMap);
+                                                    Message message = Message.obtain(mHandler);
+                                                    message.what = 0;
+                                                    mHandler.sendMessage(message);
                                                 }
-
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                                ToastUtils.showShort("网络异常");
-                                            }
+                                            });
+                                        } else {
+                                            ToastUtils.showShort(resultFacePay.getMessage());
                                         }
 
-                                        @Override
-                                        public void onError(Response<String> response) {
-                                            super.onError(response);
-                                            ToastUtils.showShort("网络异常：" + response.body());
-                                        }
-                                    });
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        ToastUtils.showShort("网络异常");
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Response<String> response) {
+                                    super.onError(response);
+                                    ToastUtils.showShort("网络异常：" + response.body());
+                                }
+                            });
 
 
-                        } else if (TextUtils.equals(code, "USER_CANCEL")) {
-                            ToastUtils.showShort("用户取消");
-                        } else if (TextUtils.equals(code, "SCAN_PAYMENT")) {
-                            ToastUtils.showShort("扫码支付");
-                        }
-                    }
-                });
+                } else if (TextUtils.equals(code, "USER_CANCEL")) {
+                    ToastUtils.showShort("用户取消");
+                } else if (TextUtils.equals(code, "SCAN_PAYMENT")) {
+                    ToastUtils.showShort("扫码支付");
+                }
             }
         });
 
     }
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (ObjectUtils.isEmpty(sucessDialog)) {
+                sucessDialog = new SucessDialog(cashFragmentView.getContext());
+                sucessDialog.setContent("收款金额：" + paymoney + "元");
+            }
+            if (!sucessDialog.isShowing()) {
+                sucessDialog.show();
+            }
+            paymoneyEdit.setText("");
+        }
+    };
 
 
     @Override
@@ -274,29 +303,65 @@ public class CashierPlatformFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        WxPayFace.getInstance().releaseWxpayface(getActivity());
+        if (sucessDialog != null && sucessDialog.isShowing()) {
+            sucessDialog.dismiss();
+        }
+        WxPayFace.getInstance().releaseWxpayface(getContext());
     }
 
-    @OnClick({R.id.tv_member, R.id.tv_refund, R.id.ll_scan, R.id.ll_truemoney, R.id.ll_qrcode, R.id.ll_bankcard, R.id.soft_keyboard_btn_1, R.id.soft_keyboard_btn_2, R.id.soft_keyboard_btn_3, R.id.soft_keyboard_btn_4, R.id.soft_keyboard_btn_5, R.id.soft_keyboard_btn_6, R.id.soft_keyboard_btn_7, R.id.soft_keyboard_btn_8, R.id.soft_keyboard_btn_9, R.id.tv_point, R.id.soft_keyboard_btn_0, R.id.rl_delete})
+    @OnClick({R.id.tv_member, R.id.tv_refund, R.id.ll_scan, R.id.ll_qrcode, R.id.soft_keyboard_btn_1, R.id.soft_keyboard_btn_2, R.id.soft_keyboard_btn_3, R.id.soft_keyboard_btn_4, R.id.soft_keyboard_btn_5, R.id.soft_keyboard_btn_6, R.id.soft_keyboard_btn_7, R.id.soft_keyboard_btn_8, R.id.soft_keyboard_btn_9, R.id.tv_point, R.id.soft_keyboard_btn_0, R.id.rl_delete})
     public void onViewClicked(View view) {
         Editable editable = paymoneyEdit.getText();
         int start = paymoneyEdit.getSelectionStart();
         switch (view.getId()) {
             case R.id.tv_member:
+                ToastUtils.showShort("选择会员");
+                ChoseMemberDialog choseMemberDialog = new ChoseMemberDialog(getContext());
+                choseMemberDialog.show();
+
                 break;
             case R.id.tv_refund:
+                RefundDialog refundDialog = new RefundDialog(getContext());
+                refundDialog.show();
+                ToastUtils.showShort("退款");
                 break;
             case R.id.ll_scan:
                 if (verifyMoney()) {
-                    getOrder();
+//                    if (ObjectUtils.isEmpty(payMoneyDialog)) {
+                    payMoneyDialog = new PayMoneyDialog(getContext(), "刷脸", paymoney + "元", "请刷脸收款");
+                    payMoneyDialog.setOnOkClickListener(new PayMoneyDialog.OnOkClickListener() {
+                        @Override
+                        public void onOkClick() {
+                            getOrder();
+                        }
+                    });
+//                    }
+//                    if (!payMoneyDialog.isShowing()) {
+                    payMoneyDialog.setContent(paymoney + "元");
+                    payMoneyDialog.show();
+//                    }
                 }
                 break;
-            case R.id.ll_truemoney:
-                break;
             case R.id.ll_qrcode:
+
+                if (verifyMoney()) {
+//                    if (ObjectUtils.isEmpty(payMoneyDialog)) {
+                    payMoneyDialog = new PayMoneyDialog(getContext(), "扫码", paymoney + "元", "请扫码收款");
+                    payMoneyDialog.setOnOkClickListener(new PayMoneyDialog.OnOkClickListener() {
+                        @Override
+                        public void onOkClick() {
+                            ToastUtils.showShort("二维码");
+                        }
+                    });
+//                    }
+//                    if (!payMoneyDialog.isShowing()) {
+                    payMoneyDialog.setContent(paymoney + "元");
+                    payMoneyDialog.setImage("http://ww3.sinaimg.cn/large/610dc034jw1fasakfvqe1j20u00mhgn2.jpg");
+                    payMoneyDialog.show();
+//                    }
+                }
                 break;
-            case R.id.ll_bankcard:
-                break;
+
             case R.id.soft_keyboard_btn_0:
                 editable.insert(start, Character.toString('0'));
                 break;

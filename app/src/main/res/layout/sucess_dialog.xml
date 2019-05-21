@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="260dp"
+    android:layout_height="180dp"
+    android:background="@drawable/dialog_bg_shape"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:background="@color/header"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:text="刷脸"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
+
+
+    <ImageView
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="13dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/sucess" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:text="收款成功"
+        android:textColor="@color/title_color"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:text="收款金额：500元"
+        android:textColor="@color/title_color"
+        android:textSize="10sp" />
+
+
+    <TextView
+        android:id="@+id/tv_close"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="end"
+        android:paddingHorizontal="5dp"
+        android:text="2秒后自动跳转"
+        android:textColor="@color/title_color"
+        android:textSize="6sp" />
+
+</LinearLayout>
