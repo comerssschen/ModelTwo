@@ -20,7 +20,7 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.comersss.modeltwo.bean.ResultLogin;
-import com.comersss.modeltwo.view.LoadingDialog;
+import com.comersss.modeltwo.dialog.home.LoadingDialog;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;

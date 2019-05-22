@@ -24,4 +24,5 @@
     <color name="gray_black">#333333</color>
     <color name="title_color">#242424</color>
     <color name="content_color">#888888</color>
+    <color name="title_bg">#EEEEEE</color>
 </resources>

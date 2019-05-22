@@ -12,7 +12,7 @@ import com.comersss.modeltwo.fragments.BossFragment;
 import com.comersss.modeltwo.fragments.CashierPlatformFragment;
 import com.comersss.modeltwo.fragments.MessageFragment;
 import com.comersss.modeltwo.fragments.StatementFragment;
-import com.comersss.modeltwo.view.BackPressDialog;
+import com.comersss.modeltwo.dialog.home.BackPressDialog;
 
 import java.util.ArrayList;
 

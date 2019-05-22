@@ -1,11 +1,11 @@
-package com.comersss.modeltwo.view;
+package com.comersss.modeltwo.dialog.member;
 
 
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.comersss.modeltwo.R;
@@ -13,8 +13,9 @@ import com.comersss.modeltwo.R;
 /**
  * 作者：create by comersss on 2019/4/4 15:38
  * 邮箱：904359289@qq.com
+ * 会员充值对话框
  */
-public class ChoseMemberDialog extends Dialog {
+public class MemberRechargeDialog extends Dialog {
 
     private Context mContext;
 
@@ -28,7 +29,7 @@ public class ChoseMemberDialog extends Dialog {
         this.onOkClickListener = onOkClickListener;
     }
 
-    public ChoseMemberDialog(Context context) {
+    public MemberRechargeDialog(Context context) {
         super(context);
         this.mContext = context;
     }
@@ -38,15 +39,24 @@ public class ChoseMemberDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.chose_member_dialog);
+        setContentView(R.layout.member_recharge_dialog);
 
-        TextView tv_content = findViewById(R.id.tv_content);
-        TextView tv_parm1 = findViewById(R.id.tv_parm1);
-        TextView tv_parm2 = findViewById(R.id.tv_parm2);
-        TextView tv_ok = findViewById(R.id.tv_ok);
-
-        EditText et_code = findViewById(R.id.et_code);
-
+//        TextView tvConfirm = findViewById(R.id.tv_parm1);
+//        TextView tvCancle = findViewById(R.id.tv_parm2);
+//
+//        tvConfirm.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (onOkClickListener != null)
+//                    onOkClickListener.onOkClick();
+//            }
+//        });
+//        tvCancle.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dismiss();
+//            }
+//        });
         setCancelable(true);
         setCanceledOnTouchOutside(true);
 

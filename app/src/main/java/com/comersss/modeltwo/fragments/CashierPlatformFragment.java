@@ -14,23 +14,20 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.SPUtils;
-import com.blankj.utilcode.util.SpanUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.comersss.modeltwo.AuthInfo;
 import com.comersss.modeltwo.EditTextUtils;
-import com.comersss.modeltwo.MainActivity;
 import com.comersss.modeltwo.R;
 import com.comersss.modeltwo.bean.ArgGetAuthInfo;
 import com.comersss.modeltwo.bean.ResultFacePay;
 import com.comersss.modeltwo.bean.ResultGetOrder;
-import com.comersss.modeltwo.view.ChoseMemberDialog;
-import com.comersss.modeltwo.view.PayMoneyDialog;
-import com.comersss.modeltwo.view.RefundDialog;
-import com.comersss.modeltwo.view.SucessDialog;
+import com.comersss.modeltwo.dialog.home.ChoseMemberDialog;
+import com.comersss.modeltwo.dialog.home.PayMoneyDialog;
+import com.comersss.modeltwo.dialog.home.RefundDialog;
+import com.comersss.modeltwo.dialog.home.SucessDialog;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -49,7 +46,6 @@ import butterknife.Unbinder;
 
 import static android.util.Log.d;
 import static android.util.Log.e;
-import static com.lzy.okgo.utils.HttpUtils.runOnUiThread;
 
 /**
  * 收银主页

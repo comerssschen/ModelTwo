@@ -1,4 +1,4 @@
-package com.comersss.modeltwo.view;
+package com.comersss.modeltwo.dialog.home;
 
 import android.app.Dialog;
 import android.content.Context;

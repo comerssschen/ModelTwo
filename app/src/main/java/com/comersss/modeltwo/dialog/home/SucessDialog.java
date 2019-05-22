@@ -1,4 +1,4 @@
-package com.comersss.modeltwo.view;
+package com.comersss.modeltwo.dialog.home;
 
 
 import android.app.Dialog;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.ObjectUtils;
 import com.comersss.modeltwo.R;
+import com.comersss.modeltwo.view.CountDownConfrimHelper;
 
 /**
  * 作者：create by comersss on 2019/4/4 15:38
