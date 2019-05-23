@@ -232,8 +232,6 @@ public class CashierPlatformFragment extends BaseFragment {
 
     private boolean verifyMoney() {
         paymoney = paymoneyEdit.getText().toString().trim();
-        BigDecimal minMoney = new BigDecimal(paymoney);
-        money = minMoney.multiply(new BigDecimal("100")).setScale(0, BigDecimal.ROUND_HALF_UP).toString();
         if (ObjectUtils.isEmpty(paymoney) || TextUtils.equals(paymoney, "0") || TextUtils.equals(paymoney, "0.") || TextUtils.equals(paymoney, "0.0") || TextUtils.equals(paymoney, "0.00")) {
             ToastUtils.showShort("请输入有效金额");
             return false;
@@ -241,6 +239,8 @@ public class CashierPlatformFragment extends BaseFragment {
             ToastUtils.showShort("最大金额99999.99");
             return false;
         } else {
+            BigDecimal minMoney = new BigDecimal(paymoney);
+            money = minMoney.multiply(new BigDecimal("100")).setScale(0, BigDecimal.ROUND_HALF_UP).toString();
             return true;
         }
     }
