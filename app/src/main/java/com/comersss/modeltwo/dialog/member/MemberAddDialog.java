@@ -19,9 +19,11 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.ConvertUtils;
 import com.blankj.utilcode.util.ObjectUtils;
+import com.blankj.utilcode.util.RegexUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.comersss.modeltwo.Constant;
+import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
 import com.comersss.modeltwo.adapter.SpinnerAdapter;
 import com.comersss.modeltwo.adapter.SpinnerThreeAdapter;
@@ -51,8 +53,6 @@ public class MemberAddDialog extends Dialog {
 
     private Context mContext;
     private String json;
-    private String proviceId;
-    private String cityId;
     private String townId;
     private List<ProvinceBean> data;
     private List<ProvinceBean> twodata;
@@ -63,9 +63,6 @@ public class MemberAddDialog extends Dialog {
     private Map<String, Map<String, String>> parmOne;
     private SpinnerTwoAdapter twoAdapter;
     private SpinnerThreeAdapter threeAdapter;
-    private TextView tv_one;
-    private TextView tv_two;
-    private TextView tv_three;
     private EditText et_phone;
     private EditText et_name;
     private EditText et_adress_detail;
@@ -73,7 +70,13 @@ public class MemberAddDialog extends Dialog {
     private HashMap<Object, Object> localHashMap;
     private RadioButton rb_man;
     private RadioButton rb_women;
+    private ArrayAdapter<String> threeSpinnerAdapter;
+    private ArrayList<String> dayData;
     private ArrayList<String> yearData;
+    private int currentYear;
+    private int currentMonth;
+    private ArrayList<String> monthData;
+    private int currentDay;
 
     public interface OnOkClickListener {
         void onOkClick();
@@ -113,24 +116,74 @@ public class MemberAddDialog extends Dialog {
     private void initDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String[] split = sdf.format(new Date()).split("-");
-        int currentYear = Integer.parseInt(split[0]);
-        int currentMonth = Integer.parseInt(split[1]);
-        int currentDay = Integer.parseInt(split[2]);
+        currentYear = Integer.parseInt(split[0]);
+        currentMonth = Integer.parseInt(split[1]);
+        currentDay = Integer.parseInt(split[2]);
         Spinner sp_two1 = findViewById(R.id.sp_two1);
         Spinner sp_one1 = findViewById(R.id.sp_one1);
         Spinner sp_three1 = findViewById(R.id.sp_three1);
 
-        //简单的string数组适配器：样式res，数组
         yearData = getYearData(currentYear);
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, yearData);
-        //下拉的样式res
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //绑定 Adapter到控件
-        sp_one1.setAdapter(spinnerAdapter);
+        ArrayAdapter<String> OneSpinnerAdapter = new ArrayAdapter<>(mContext, R.layout.item_spinner, yearData);
+        OneSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_one1.setAdapter(OneSpinnerAdapter);
+        sp_one1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currentYear = Integer.parseInt(yearData.get(position));
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        monthData = getMonthData();
+        ArrayAdapter<String> twoSpinnerAdapter = new ArrayAdapter<>(mContext, R.layout.item_spinner, monthData);
+        twoSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_two1.setAdapter(twoSpinnerAdapter);
+        sp_two1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currentMonth = Integer.parseInt(monthData.get(position));
+                dayData.clear();
+                dayData.addAll(getDayData(getLastDay(currentYear, currentMonth)));
+                threeSpinnerAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        dayData = getDayData(getLastDay(currentYear, currentMonth));
+        threeSpinnerAdapter = new ArrayAdapter<>(mContext, R.layout.item_spinner, dayData);
+        threeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_three1.setAdapter(threeSpinnerAdapter);
+        sp_three1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currentDay = Integer.parseInt(dayData.get(position));
+                ToastUtils.showShort(currentYear + "," + currentMonth + "," + currentDay);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void initView() {
+        TextView tv_scan = findViewById(R.id.tv_scan);
+        tv_scan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                et_membercode.setText(NetUtil.getInstance().getOpenId());
+            }
+        });
         TextView tv_button = findViewById(R.id.tv_button);
         tv_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,9 +199,6 @@ public class MemberAddDialog extends Dialog {
         et_adress_detail = findViewById(R.id.et_adress_detail);
         et_membercode = findViewById(R.id.et_membercode);
 
-        tv_one = findViewById(R.id.tv_one);
-        tv_two = findViewById(R.id.tv_two);
-        tv_three = findViewById(R.id.tv_three);
         sp_one = findViewById(R.id.sp_one);
         sp_two = findViewById(R.id.sp_two);
         sp_three = findViewById(R.id.sp_three);
@@ -166,16 +216,7 @@ public class MemberAddDialog extends Dialog {
         sp_one.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                ToastUtils.showShort(data.get(position).getName());
-                tv_one.setText(data.get(position).getName());
-                proviceId = data.get(position).getId();
-                cityId = "";
-                townId = "";
-                tv_two.setText("");
-                tv_three.setText("");
-                sp_three.setClickable(false);
-                sp_two.setClickable(true);
-                twodata = getData(proviceId);
+                twodata = getData(data.get(position).getId());
                 twoAdapter.setData(twodata);
                 sp_two.setClickable(true);
             }
@@ -191,15 +232,8 @@ public class MemberAddDialog extends Dialog {
         sp_two.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                ToastUtils.showShort(twodata.get(position).getName());
-                tv_two.setText(twodata.get(position).getName());
-                cityId = twodata.get(position).getId();
-                townId = "";
-                tv_three.setText("");
-                threedata = getData(cityId);
-                sp_three.setClickable(true);
+                threedata = getData(twodata.get(position).getId());
                 threeAdapter.setData(threedata);
-                sp_three.setClickable(true);
             }
 
             @Override
@@ -213,7 +247,6 @@ public class MemberAddDialog extends Dialog {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ToastUtils.showShort(threedata.get(position).getName());
-                tv_three.setText(threedata.get(position).getName());
                 townId = threedata.get(position).getId();
             }
 
@@ -225,17 +258,33 @@ public class MemberAddDialog extends Dialog {
     }
 
     private void Save() {
+        String nameStr = et_name.getText().toString();
+        String phoneStr = et_phone.getText().toString();
+        String adressStr = et_adress_detail.getText().toString();
+        String memberCode = et_membercode.getText().toString();
+
+        if (!RegexUtils.isMobileSimple(phoneStr)) {
+            ToastUtils.showShort("请输入正确的手机号");
+            return;
+        }
+        if (ObjectUtils.isEmpty(nameStr) || ObjectUtils.isEmpty(adressStr) || ObjectUtils.isEmpty(memberCode)) {
+            ToastUtils.showShort("请输入必填项");
+        }
+
+        if (ObjectUtils.isEmpty(townId)) {
+            townId = threedata.get(0).getId();
+        }
         localHashMap = new HashMap<>();
-        localHashMap.put("Name", et_name.getText().toString());
+        localHashMap.put("Name", nameStr);
         localHashMap.put("Sex", rb_man.isChecked() ? 1 : 0);
-        localHashMap.put("PhoneNum", et_phone.getText().toString());
-        localHashMap.put("Birthday", "2002-02-02");
-        localHashMap.put("AddressCode", "120119");
-        localHashMap.put("Address", et_adress_detail.getText().toString());
+        localHashMap.put("PhoneNum", phoneStr);
+        localHashMap.put("Birthday", currentYear + "-" + currentMonth + "-" + currentDay);
+        localHashMap.put("AddressCode", townId);
+        localHashMap.put("Address", adressStr);
 //        localHashMap.put("EntryMode", codeStr);
 //        localHashMap.put("AliUnqueId", codeStr);
 //        localHashMap.put("WechatUnqueId", codeStr);
-        localHashMap.put("MemberLevelId", et_membercode.getText().toString());
+        localHashMap.put("MemberLevelId", memberCode);
 //        localHashMap.put("IsLocked", codeStr);
 
         OkGo.<String>post(Constant.URL + Constant.AddMember)

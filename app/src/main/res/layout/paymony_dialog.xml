@@ -16,7 +16,6 @@
         android:textColor="@color/white"
         android:textSize="12sp" />
 
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,7 +50,6 @@
         android:scaleType="fitXY"
         android:src="@drawable/user" />
 
-
     <TextView
         android:id="@+id/tv_button"
         android:layout_width="80dp"
@@ -63,6 +61,5 @@
         android:text="请刷脸收款"
         android:textColor="@color/white"
         android:textSize="10sp" />
-
 
 </LinearLayout>

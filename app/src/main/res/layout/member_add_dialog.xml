@@ -119,7 +119,6 @@
 
     </LinearLayout>
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -192,66 +191,27 @@
             android:layout_height="22dp"
             android:layout_weight="36">
 
-            <LinearLayout
+            <Spinner
+                android:id="@+id/sp_one"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/common_backgroud_black_shape">
+                android:background="@drawable/common_backgroud_black_shape" />
 
-                <TextView
-                    android:id="@+id/tv_one"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:textSize="8sp" />
 
-                <Spinner
-                    android:id="@+id/sp_one"
-                    android:layout_width="10dp"
-                    android:layout_height="match_parent" />
-            </LinearLayout>
-
-            <LinearLayout
+            <Spinner
+                android:id="@+id/sp_two"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/common_backgroud_black_shape">
+                android:background="@drawable/common_backgroud_black_shape" />
 
-                <TextView
-                    android:id="@+id/tv_two"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:textSize="8sp" />
-
-                <Spinner
-                    android:id="@+id/sp_two"
-                    android:layout_width="10dp"
-                    android:layout_height="match_parent" />
-            </LinearLayout>
-
-            <LinearLayout
+            <Spinner
+                android:id="@+id/sp_three"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/common_backgroud_black_shape">
-
-                <TextView
-                    android:id="@+id/tv_three"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:textSize="8sp" />
-
-                <Spinner
-                    android:id="@+id/sp_three"
-                    android:layout_width="10dp"
-                    android:layout_height="match_parent" />
-            </LinearLayout>
-
+                android:background="@drawable/common_backgroud_black_shape" />
 
         </LinearLayout>
 
@@ -295,15 +255,22 @@
         android:paddingLeft="40dp"
         android:paddingRight="30dp">
 
-        <TextView
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="20dp"
-            android:layout_weight="10"
-            android:background="@drawable/common_backgroud_shape"
-            android:gravity="center"
-            android:text="筛选"
-            android:textColor="@color/white"
-            android:textSize="10sp" />
+            android:layout_weight="10">
+
+            <TextView
+                android:id="@+id/tv_scan"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/common_backgroud_shape"
+                android:gravity="center"
+                android:text="刷脸"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+
+        </LinearLayout>
 
 
         <EditText
@@ -329,4 +296,5 @@
         android:text="确定"
         android:textColor="@color/white"
         android:textSize="10sp" />
+
 </LinearLayout>

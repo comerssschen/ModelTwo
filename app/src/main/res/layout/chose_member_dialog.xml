@@ -16,7 +16,6 @@
         android:textColor="@color/white"
         android:textSize="12sp" />
 
-
     <TextView
         android:id="@+id/tv_content"
         android:layout_width="wrap_content"
@@ -37,7 +36,6 @@
         android:hint="唯一识别码"
         android:paddingLeft="5dp"
         android:textSize="10sp" />
-
 
     <LinearLayout
         android:layout_width="wrap_content"

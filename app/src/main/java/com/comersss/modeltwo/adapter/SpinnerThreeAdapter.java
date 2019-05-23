@@ -22,10 +22,12 @@ public class SpinnerThreeAdapter extends BaseAdapter {
     private Context ctx;
     private LayoutInflater li;
     private List<ProvinceBean> dataList;
+
     public void setData(List<ProvinceBean> dataList) {
         this.dataList = dataList;
         notifyDataSetChanged();
     }
+
     public SpinnerThreeAdapter(Context ctx, List<ProvinceBean> dataList) {
         this.ctx = ctx;
         this.li = LayoutInflater.from(ctx);

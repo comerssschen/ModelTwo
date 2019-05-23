@@ -25,6 +25,7 @@ public class SpinnerAdapter extends BaseAdapter {
         this.ctx = ctx;
         this.dataList = dataList;
     }
+
     public void setData(List<ProvinceBean> dataList) {
         this.dataList = dataList;
         notifyDataSetChanged();

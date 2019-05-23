@@ -16,7 +16,6 @@
         android:textColor="@color/white"
         android:textSize="12sp" />
 
-
     <ImageView
         android:layout_width="56dp"
         android:layout_height="56dp"
@@ -44,7 +43,6 @@
         android:text="收款金额：500元"
         android:textColor="@color/title_color"
         android:textSize="10sp" />
-
 
     <TextView
         android:id="@+id/tv_close"

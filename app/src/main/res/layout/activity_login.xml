@@ -51,7 +51,6 @@
 
         </LinearLayout>
 
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -114,6 +113,6 @@
             android:textColor="@color/white"
             android:textSize="12sp" />
 
-
     </LinearLayout>
+
 </RelativeLayout>
