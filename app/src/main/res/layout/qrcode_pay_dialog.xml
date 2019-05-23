@@ -62,6 +62,8 @@
         android:textSize="12sp" />
 
     <EditText
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:id="@+id/et_scan"
         android:layout_width="1dp"
         android:layout_height="1dp" />

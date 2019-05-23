@@ -56,7 +56,7 @@ public class MemberAddDialog extends Dialog {
     private String townId;
     private List<ProvinceBean> data;
     private List<ProvinceBean> twodata;
-    private List<ProvinceBean> threedata;
+    private List<ProvinceBean> threedata = new ArrayList<>();
     private Spinner sp_one;
     private Spinner sp_two;
     private Spinner sp_three;
@@ -218,7 +218,8 @@ public class MemberAddDialog extends Dialog {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 twodata = getData(data.get(position).getId());
                 twoAdapter.setData(twodata);
-                sp_two.setClickable(true);
+                threedata.clear();
+                threeAdapter.notifyDataSetChanged();
             }
 
             @Override
