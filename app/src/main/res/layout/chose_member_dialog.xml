@@ -1,80 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="260dp"
-    android:layout_height="180dp"
-    android:background="@drawable/dialog_bg_shape"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="match_parent"
-        android:layout_height="26dp"
-        android:background="@color/header"
-        android:gravity="center_vertical"
-        android:paddingLeft="10dp"
-        android:text="选择会员"
-        android:textColor="@color/white"
-        android:textSize="12sp" />
-
-    <TextView
-        android:id="@+id/tv_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="24dp"
-        android:text="姓名：张三  等级：钻石  余额：100元"
-        android:textColor="@color/title_color"
-        android:textSize="8sp" />
-
-    <EditText
-        android:id="@+id/et_code"
-        android:layout_width="180dp"
-        android:layout_height="22dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="3dp"
-        android:background="@drawable/common_backgroud_black_shape"
-        android:hint="唯一识别码"
-        android:paddingLeft="5dp"
-        android:textSize="10sp" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_width="260dp"
+        android:layout_height="180dp"
+        android:background="@drawable/dialog_bg_shape"
+        android:orientation="vertical">
+
 
         <TextView
-            android:id="@+id/tv_parm1"
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="26dp"
+            android:background="@color/header"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="选择会员"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:text="姓名：张三  等级：钻石  余额：100元"
+            android:textColor="@color/title_color"
+            android:textSize="8sp" />
+
+        <EditText
+            android:id="@+id/et_code"
+            android:layout_width="180dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/common_backgroud_black_shape"
+            android:hint="唯一识别码"
+            android:paddingLeft="5dp"
+            android:textSize="10sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/tv_parm1"
+                android:layout_width="80dp"
+                android:layout_height="20dp"
+                android:background="@drawable/common_backgroud_shape"
+                android:gravity="center"
+                android:text="请刷脸"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/tv_parm2"
+                android:layout_width="80dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="35dp"
+                android:background="@drawable/common_backgroud_shape"
+                android:gravity="center"
+                android:text="手动输入"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_ok"
             android:layout_width="80dp"
             android:layout_height="20dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
             android:background="@drawable/common_backgroud_shape"
             android:gravity="center"
-            android:text="请刷脸"
+            android:text="确认"
             android:textColor="@color/white"
             android:textSize="10sp" />
 
-        <TextView
-            android:id="@+id/tv_parm2"
-            android:layout_width="80dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="35dp"
-            android:background="@drawable/common_backgroud_shape"
-            android:gravity="center"
-            android:text="手动输入"
-            android:textColor="@color/white"
-            android:textSize="10sp" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_ok"
-        android:layout_width="80dp"
-        android:layout_height="20dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/common_backgroud_shape"
-        android:gravity="center"
-        android:text="确认"
-        android:textColor="@color/white"
-        android:textSize="10sp" />
-
-</LinearLayout>
+</RelativeLayout>

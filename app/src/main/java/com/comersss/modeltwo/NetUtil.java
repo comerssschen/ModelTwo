@@ -77,13 +77,14 @@ public class NetUtil {
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
+                            Log.i(TAG, "getOrder :" + body);
                             ResultGetOrder resultGetOrder = new Gson().fromJson(body, ResultGetOrder.class);
                             if (resultGetOrder.isSuccess()) {
                                 wxPay(resultGetOrder.getData(), money, payResultLitener);
                             } else {
                                 ToastUtils.showShort(resultGetOrder.getMessage());
                             }
-                            Log.i(TAG, "getAuthInfo :" + body);
+
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -187,6 +188,7 @@ public class NetUtil {
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
+                            Log.i("test", "getQrCodePay :" + body);
                             payResultLitener.sucess(body);
 //                            ResultGetOrder resultGetOrder = new Gson().fromJson(body, ResultGetOrder.class);
 //                            if (resultGetOrder.isSuccess()) {
@@ -195,7 +197,7 @@ public class NetUtil {
 //                                ToastUtils.showShort(resultGetOrder.getMessage());
 //                            }
                             ToastUtils.showShort(body);
-                            Log.i("test", "getAuthInfo :" + body);
+
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -225,7 +227,7 @@ public class NetUtil {
                             String body = response.body();
                             ResultBase resultGetOrder = new Gson().fromJson(body, ResultBase.class);
                             payResultLitener.sucess(resultGetOrder.getMessage());
-                            Log.i("test", "getAuthInfo :" + body);
+                            Log.i("test", "QueryMember :" + body);
                         } catch (Exception e) {
                             e.printStackTrace();
                             payResultLitener.fail(e.toString());
@@ -239,6 +241,31 @@ public class NetUtil {
                         payResultLitener.fail(response.body());
                     }
                 });
+    }
+
+    //单条会员信息的查询
+    public void QueryMemberByOpenId(final PayResultLitener payResultLitener) {
+        localHashMap = new HashMap();
+        localHashMap.put("face_authtype", "FACEID-ONCE");
+        localHashMap.put("appid", Constant.appid);
+        localHashMap.put("mch_id", Constant.mch_id);
+        localHashMap.put("sub_mch_id", Constant.sub_mch_id);
+        if (TextUtils.isEmpty(Constant.authInfo.getAuthinfo())) {
+            ToastUtils.showShort("请先获取rawdata");
+            return;
+        }
+        localHashMap.put("authinfo", Constant.authInfo.getAuthinfo());
+        Log.i("test", "localHashMap" + localHashMap.toString());
+        WxPayFace.getInstance().getWxpayfaceUserInfo(localHashMap, new IWxPayfaceCallback() {
+            @Override
+            public void response(Map map) throws RemoteException {
+                Log.i("test", "map = " + map.toString());
+                Result = map.get("openid").toString();
+                QueryMember(Result, payResultLitener);
+            }
+        });
+
+
     }
 
     //会员充值
@@ -257,7 +284,7 @@ public class NetUtil {
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            Log.i("test", "getAuthInfo :" + body);
+                            Log.i("test", "Recharge :" + body);
                             ResultBase resultGetOrder = new Gson().fromJson(body, ResultBase.class);
                             payResultLitener.sucess(resultGetOrder.getMessage());
 
@@ -290,7 +317,7 @@ public class NetUtil {
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            Log.i("test", "getAuthInfo :" + body);
+                            Log.i("test", "LockOrUnlockMember :" + body);
                             ResultBase resultGetOrder = new Gson().fromJson(body, ResultBase.class);
                             if (resultGetOrder.isSuccess()) {
                                 ToastUtils.showShort("操作成功");

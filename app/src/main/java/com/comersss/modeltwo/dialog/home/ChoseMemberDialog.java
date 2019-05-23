@@ -94,8 +94,7 @@ public class ChoseMemberDialog extends Dialog {
         tv_parm1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String openId = NetUtil.getInstance().getOpenId();
-                NetUtil.getInstance().QueryMember(openId, new PayResultLitener() {
+                NetUtil.getInstance().QueryMemberByOpenId(new PayResultLitener() {
                     @Override
                     public void sucess(String serverRetData) {
                         tv_content.setText(serverRetData);

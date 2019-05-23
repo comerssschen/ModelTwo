@@ -2,9 +2,7 @@ package com.comersss.modeltwo.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
-import android.os.RemoteException;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,37 +16,25 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.comersss.modeltwo.AuthInfo;
-import com.comersss.modeltwo.Constant;
 import com.comersss.modeltwo.EditTextUtils;
 import com.comersss.modeltwo.Listener.PayResultLitener;
 import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
-import com.comersss.modeltwo.bean.ArgGetAuthInfo;
-import com.comersss.modeltwo.bean.ResultFacePay;
-import com.comersss.modeltwo.bean.ResultGetOrder;
 import com.comersss.modeltwo.dialog.home.ChoseMemberDialog;
 import com.comersss.modeltwo.dialog.home.PayMoneyDialog;
 import com.comersss.modeltwo.dialog.home.QrCodePayDialog;
 import com.comersss.modeltwo.dialog.home.RefundDialog;
 import com.comersss.modeltwo.dialog.home.SucessDialog;
-import com.google.gson.Gson;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.model.Response;
-import com.tencent.wxpayface.IWxPayfaceCallback;
 import com.tencent.wxpayface.WxPayFace;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static android.util.Log.d;
 
 /**
  * 收银主页
@@ -139,10 +125,9 @@ public class CashierPlatformFragment extends BaseFragment {
         int start = paymoneyEdit.getSelectionStart();
         switch (view.getId()) {
             case R.id.tv_member:
-                ToastUtils.showShort("选择会员");
+//                startActivity(new Intent(getContext(), TestActivity.class));
                 ChoseMemberDialog choseMemberDialog = new ChoseMemberDialog(getContext());
                 choseMemberDialog.show();
-
                 break;
             case R.id.tv_refund:
                 RefundDialog refundDialog = new RefundDialog(getContext());

@@ -68,7 +68,7 @@ public class MemberRechargeDialog extends Dialog {
         tv_parm1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NetUtil.getInstance().QueryMember(NetUtil.getInstance().getOpenId(), new PayResultLitener() {
+                NetUtil.getInstance().QueryMemberByOpenId(new PayResultLitener() {
                     @Override
                     public void sucess(String serverRetData) {
                         ToastUtils.showShort(serverRetData);
