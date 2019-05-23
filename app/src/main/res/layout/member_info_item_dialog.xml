@@ -12,11 +12,12 @@
         android:background="@color/header"
         android:gravity="center_vertical"
         android:paddingLeft="10dp"
-        android:text="会员充值"
+        android:text="信息"
         android:textColor="@color/white"
         android:textSize="12sp" />
 
     <TextView
+        android:id="@+id/tv_dongjie"
         android:layout_width="80dp"
         android:layout_height="20dp"
         android:layout_gravity="center_horizontal"
@@ -28,6 +29,7 @@
         android:textSize="10sp" />
 
     <TextView
+        android:id="@+id/tv_jiedong"
         android:layout_width="80dp"
         android:layout_height="20dp"
         android:layout_gravity="center_horizontal"
@@ -39,6 +41,7 @@
         android:textSize="10sp" />
 
     <TextView
+        android:id="@+id/tv_update"
         android:layout_width="80dp"
         android:layout_height="20dp"
         android:layout_gravity="center_horizontal"

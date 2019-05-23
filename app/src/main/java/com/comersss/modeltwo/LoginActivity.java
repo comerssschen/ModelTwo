@@ -116,7 +116,7 @@ public class LoginActivity extends BaseActivity {
         Map<String, String> logMap = new HashMap<>();
         logMap.put("LoginName", loginName);
         logMap.put("LoginPassword", pwd);
-        OkGo.<String>post("http://api.pay.360yunpay.com/api/PayApi/Login")
+        OkGo.<String>post(Constant.URL + Constant.Login)
                 .upJson(new Gson().toJson(logMap))
                 .execute(new StringCallback() {
                     @Override

@@ -19,13 +19,17 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.comersss.modeltwo.AuthInfo;
+import com.comersss.modeltwo.Constant;
 import com.comersss.modeltwo.EditTextUtils;
+import com.comersss.modeltwo.Listener.PayResultLitener;
+import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
 import com.comersss.modeltwo.bean.ArgGetAuthInfo;
 import com.comersss.modeltwo.bean.ResultFacePay;
 import com.comersss.modeltwo.bean.ResultGetOrder;
 import com.comersss.modeltwo.dialog.home.ChoseMemberDialog;
 import com.comersss.modeltwo.dialog.home.PayMoneyDialog;
+import com.comersss.modeltwo.dialog.home.QrCodePayDialog;
 import com.comersss.modeltwo.dialog.home.RefundDialog;
 import com.comersss.modeltwo.dialog.home.SucessDialog;
 import com.google.gson.Gson;
@@ -45,7 +49,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static android.util.Log.d;
-import static android.util.Log.e;
 
 /**
  * 收银主页
@@ -66,9 +69,8 @@ public class CashierPlatformFragment extends BaseFragment {
     LinearLayout llQrcode;
     Unbinder unbinder;
     private String paymoney;
-    private String localhostUrl = "http://api.pay.360yunpay.com";
     private String money;
-    private AuthInfo authInfo;
+
     private String appid = "wx2b975c0ca94a6154";
     private String mch_id = "1440771702";
     private String sub_mch_id = "1531015161";
@@ -77,6 +79,7 @@ public class CashierPlatformFragment extends BaseFragment {
     private SucessDialog sucessDialog;
     private View cashFragmentView;
     private PayMoneyDialog payMoneyDialog;
+    private QrCodePayDialog qrCodePayDialog;
 
 
     @Override
@@ -91,190 +94,15 @@ public class CashierPlatformFragment extends BaseFragment {
         Log.i(TAG, "initView");
         unbinder = ButterKnife.bind(this, mChildContentView);
         EditTextUtils.setPriceEditText(paymoneyEdit);
-        authInfo = new AuthInfo();
-//        WxPayFace.getInstance().initWxpayface(getActivity(), new IWxPayfaceCallback() {
-//            public void response(Map paramMap) throws RemoteException {
-//                d(TAG, "response | initWxpayface " + paramMap);
-//                getAuthInfo();
-//            }
-//        });
+
         spUtils = SPUtils.getInstance();
-    }
-
-    public void getAuthInfo() {
-        WxPayFace.getInstance().getWxpayfaceRawdata(new IWxPayfaceCallback() {
-            public void response(Map paramMap) throws RemoteException {
-                Log.i("test", "paramMap = " + paramMap);
-                Map<String, Object> map = new HashMap<>();
-                map.put("data1", "10");
-                map.put("data2", paramMap.get("rawdata").toString());
-                Log.i("test", "map = " + map);
-                OkGo.<String>post(localhostUrl + "/api/FacePayApi/WechatFaceAuth")
-                        .upJson(new Gson().toJson(map))
-                        .headers("Authorization", spUtils.getString("token", ""))
-                        .execute(new StringCallback() {
-                            @Override
-                            public void onSuccess(Response<String> response) {
-                                try {
-                                    String body = response.body();
-                                    Log.i("test", "getAuthInfo :" + body);
-                                    ArgGetAuthInfo result = new Gson().fromJson(body, ArgGetAuthInfo.class);
-                                    if (result.isSuccess()) {
-                                        authInfo.setAuthinfo(result.getData().getAuthinfo());
-                                        authInfo.setExpire_time(System.currentTimeMillis());
-                                        //开启一个子线程，定时刷新
-                                        new Thread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Looper.prepare();
-                                                try {
-//                                                    int millis = Integer.parseInt(result.getData().getExpires_in());
-//                                                    Log.i("test", millis + "");
-                                                    Thread.sleep(24 * 60 * 60 * 1000);
-                                                    getAuthInfo();
-                                                } catch (InterruptedException e) {
-                                                    e.printStackTrace();
-                                                }
-                                                Looper.loop();
-                                            }
-                                        }).start();
-                                    } else {
-                                        ToastUtils.showShort(" Msg = " + result.getMessage());
-                                    }
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    ToastUtils.showShort("初始化失败,请退出重进");
-
-                                }
-                            }
-
-                            @Override
-                            public void onError(Response<String> response) {
-                                super.onError(response);
-                                ToastUtils.showShort("初始化失败,请退出重进");
-                            }
-                        });
-            }
-        });
-
-    }
-
-    private void getOrder() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("data", "10");
-        OkGo.<String>post(localhostUrl + "/api/FacePayApi/GenerateOrderNum")
-                .upJson(new Gson().toJson(map))
-                .headers("Authorization", spUtils.getString("token", ""))
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        try {
-                            String body = response.body();
-                            ResultGetOrder resultGetOrder = new Gson().fromJson(body, ResultGetOrder.class);
-                            if (resultGetOrder.isSuccess()) {
-                                wxPay(resultGetOrder.getData());
-                            } else {
-                                ToastUtils.showShort(resultGetOrder.getMessage());
-                            }
-                            Log.i("test", "getAuthInfo :" + body);
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            ToastUtils.showShort("预下单失败，请重试");
-
-                        }
-                    }
-
-                    @Override
-                    public void onError(Response<String> response) {
-                        super.onError(response);
-                        ToastUtils.showShort("预下单失败，请重试");
-                    }
-                });
-    }
-
-    private void wxPay(final String outTratNum) {
-        BigDecimal minMoney = new BigDecimal(paymoney);
-        money = minMoney.multiply(new BigDecimal("100")).setScale(0, BigDecimal.ROUND_HALF_UP).toString();
-        localHashMap = new HashMap();
-        localHashMap.put("face_authtype", "FACEPAY");
-        localHashMap.put("appid", appid);
-        localHashMap.put("mch_id", mch_id);
-//        localHashMap.put("store_id", store_id);
-        localHashMap.put("out_trade_no", outTratNum);
-        localHashMap.put("total_fee", money);
-        localHashMap.put("ask_face_permit", "1");
-        localHashMap.put("ask_ret_page", "1");
-//        localHashMap.put("sub_appid", sub_appid);
-        localHashMap.put("sub_mch_id", sub_mch_id);
-        if (TextUtils.isEmpty(authInfo.getAuthinfo())) {
-            ToastUtils.showShort("请先获取rawdata");
-            return;
-        }
-        localHashMap.put("authinfo", authInfo.getAuthinfo());
-        Log.i("test", "localHashMap" + localHashMap.toString());
-        WxPayFace.getInstance().getWxpayfaceCode(localHashMap, new IWxPayfaceCallback() {
-            public void response(final Map paramMap) throws RemoteException {
-                d(TAG, "response | getWxpayfaceCode " + paramMap);
-                final String code = paramMap.get("return_code").toString();
-                if (TextUtils.equals(code, "SUCCESS")) {
-                    Map<String, String> map = new HashMap<>();
-                    map.put("data1", "10");
-                    map.put("data2", money);
-                    map.put("data3", outTratNum);
-                    map.put("data4", paramMap.get("openid").toString().trim());
-                    map.put("data5", paramMap.get("face_code").toString().trim());
-                    OkGo.<String>post(localhostUrl + "/api/FacePayApi/WechatFacePay")
-                            .upJson(new Gson().toJson(map))
-                            .headers("Authorization", spUtils.getString("token", ""))
-                            .execute(new StringCallback() {
-                                @Override
-                                public void onSuccess(Response<String> response) {
-                                    Log.i("test", "response.body() = " + response.body());
-                                    try {
-                                        ResultFacePay resultFacePay = new Gson().fromJson(response.body(), ResultFacePay.class);
-                                        if (resultFacePay.isSuccess()) {
-                                            WxPayFace.getInstance().updateWxpayfacePayResult(localHashMap, new IWxPayfaceCallback() {
-                                                public void response(Map paramMap) throws RemoteException {
-                                                    d(TAG, "paramMap" + paramMap);
-                                                    Message message = Message.obtain(mHandler);
-                                                    message.what = 0;
-                                                    mHandler.sendMessage(message);
-                                                }
-                                            });
-                                        } else {
-                                            ToastUtils.showShort(resultFacePay.getMessage());
-                                        }
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        ToastUtils.showShort("网络异常");
-                                    }
-                                }
-
-                                @Override
-                                public void onError(Response<String> response) {
-                                    super.onError(response);
-                                    ToastUtils.showShort("网络异常：" + response.body());
-                                }
-                            });
-
-
-                } else if (TextUtils.equals(code, "USER_CANCEL")) {
-                    ToastUtils.showShort("用户取消");
-                } else if (TextUtils.equals(code, "SCAN_PAYMENT")) {
-                    ToastUtils.showShort("扫码支付");
-                }
-            }
-        });
-
     }
 
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            payMoneyDialog.dismiss();
             if (ObjectUtils.isEmpty(sucessDialog)) {
                 sucessDialog = new SucessDialog(cashFragmentView.getContext());
                 sucessDialog.setContent("收款金额：" + paymoney + "元");
@@ -328,7 +156,19 @@ public class CashierPlatformFragment extends BaseFragment {
                     payMoneyDialog.setOnOkClickListener(new PayMoneyDialog.OnOkClickListener() {
                         @Override
                         public void onOkClick() {
-                            getOrder();
+                            NetUtil.getInstance().getOrder(money, new PayResultLitener() {
+                                @Override
+                                public void sucess(String serverRetData) {
+                                    Message message = Message.obtain(mHandler);
+                                    message.what = 0;
+                                    mHandler.sendMessage(message);
+                                }
+
+                                @Override
+                                public void fail(String errMsg) {
+                                    ToastUtils.showShort(errMsg);
+                                }
+                            });
                         }
                     });
 //                    }
@@ -339,22 +179,28 @@ public class CashierPlatformFragment extends BaseFragment {
                 }
                 break;
             case R.id.ll_qrcode:
-
                 if (verifyMoney()) {
-//                    if (ObjectUtils.isEmpty(payMoneyDialog)) {
-                    payMoneyDialog = new PayMoneyDialog(getContext(), "扫码", paymoney + "元", "请扫码收款");
-                    payMoneyDialog.setOnOkClickListener(new PayMoneyDialog.OnOkClickListener() {
+                    qrCodePayDialog = new QrCodePayDialog(getContext(), "扫码", paymoney + "元", "请扫码收款");
+                    qrCodePayDialog.setOnOkClickListener(new QrCodePayDialog.OnOkClickListener() {
                         @Override
-                        public void onOkClick() {
-                            ToastUtils.showShort("二维码");
+                        public void onResult(String result) {
+                            NetUtil.getInstance().getQrCodePay(result, money, new PayResultLitener() {
+                                @Override
+                                public void sucess(String serverRetData) {
+                                    ToastUtils.showShort(serverRetData);
+                                }
+
+                                @Override
+                                public void fail(String errMsg) {
+                                    ToastUtils.showShort(errMsg);
+                                }
+                            });
                         }
                     });
-//                    }
-//                    if (!payMoneyDialog.isShowing()) {
-                    payMoneyDialog.setContent(paymoney + "元");
-                    payMoneyDialog.setImage("http://ww3.sinaimg.cn/large/610dc034jw1fasakfvqe1j20u00mhgn2.jpg");
-                    payMoneyDialog.show();
-//                    }
+                    if (!qrCodePayDialog.isShowing()) {
+                        qrCodePayDialog.setContent(paymoney + "元");
+                        qrCodePayDialog.show();
+                    }
                 }
                 break;
 
@@ -401,6 +247,8 @@ public class CashierPlatformFragment extends BaseFragment {
 
     private boolean verifyMoney() {
         paymoney = paymoneyEdit.getText().toString().trim();
+        BigDecimal minMoney = new BigDecimal(paymoney);
+        money = minMoney.multiply(new BigDecimal("100")).setScale(0, BigDecimal.ROUND_HALF_UP).toString();
         if (ObjectUtils.isEmpty(paymoney) || TextUtils.equals(paymoney, "0") || TextUtils.equals(paymoney, "0.") || TextUtils.equals(paymoney, "0.0") || TextUtils.equals(paymoney, "0.00")) {
             ToastUtils.showShort("请输入有效金额");
             return false;

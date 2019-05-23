@@ -85,6 +85,7 @@
         android:textSize="10sp" />
 
     <EditText
+        android:id="@+id/et_money"
         android:layout_width="200dp"
         android:layout_height="22dp"
         android:layout_gravity="center_horizontal"

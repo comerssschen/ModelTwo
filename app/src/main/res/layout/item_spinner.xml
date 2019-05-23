@@ -2,6 +2,12 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tv_spinner"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:ellipsize="marquee"
+    android:paddingVertical="@dimen/dp_4"
+    android:singleLine="true"
+    android:textAlignment="inherit"
+    android:textColor="@color/title_color"
+    android:textSize="10sp">
 
 </TextView>

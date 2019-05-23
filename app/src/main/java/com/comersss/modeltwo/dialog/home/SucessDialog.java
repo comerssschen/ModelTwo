@@ -4,6 +4,7 @@ package com.comersss.modeltwo.dialog.home;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
@@ -23,11 +24,20 @@ public class SucessDialog extends Dialog {
     private TextView tvContent;
     private TextView tvClose;
     private String content;
+    private String stateStr;
+    private TextView tvState;
 
 
     public SucessDialog(Context context) {
         super(context);
         this.context = context;
+    }
+
+    public SucessDialog(Context context,String content,String stateStr) {
+        super(context);
+        this.context = context;
+        this.content = content;
+        this.stateStr = stateStr;
     }
 
     public void setTitle(String title) {
@@ -61,10 +71,12 @@ public class SucessDialog extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.sucess_dialog);
 
+        tvState = findViewById(R.id.tv_state);
         tvTitle = findViewById(R.id.tv_title);
         tvContent = findViewById(R.id.tv_content);
         tvClose = findViewById(R.id.tv_close);
         tvContent.setText(content);
+        tvState.setText(stateStr);
         setCancelable(true);
         setCanceledOnTouchOutside(true);
 

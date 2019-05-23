@@ -1,20 +1,33 @@
 package com.comersss.modeltwo;
 
 import android.os.Bundle;
+import android.os.Looper;
+import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 
 import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.ToastUtils;
+import com.comersss.modeltwo.bean.ArgGetAuthInfo;
 import com.comersss.modeltwo.fragments.BossFragment;
 import com.comersss.modeltwo.fragments.CashierPlatformFragment;
 import com.comersss.modeltwo.fragments.MessageFragment;
 import com.comersss.modeltwo.fragments.StatementFragment;
 import com.comersss.modeltwo.dialog.home.BackPressDialog;
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+import com.tencent.wxpayface.IWxPayfaceCallback;
+import com.tencent.wxpayface.WxPayFace;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
  * 主界面
@@ -31,6 +44,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     private MessageFragment messageFragment;
     private BossFragment bossFragment;
     private BackPressDialog backPressDialog;
+    private HashMap<Object, Object> localHashMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +75,18 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 finish();
             }
         });
+
+        try {
+            WxPayFace.getInstance().initWxpayface(MainActivity.this, new IWxPayfaceCallback() {
+                public void response(Map paramMap) throws RemoteException {
+                    Log.i("test", "response | initWxpayface " + paramMap);
+                    getAuthInfo();
+                }
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Log.i("test", ex + "");
+        }
 
     }
 
@@ -110,5 +136,66 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
         preFragment = fm;
     }
+
+
+    public void getAuthInfo() {
+        WxPayFace.getInstance().getWxpayfaceRawdata(new IWxPayfaceCallback() {
+            public void response(Map paramMap) throws RemoteException {
+                Log.i("test", "paramMap = " + paramMap);
+                localHashMap = new HashMap<>();
+                localHashMap.put("data1", "10");
+                localHashMap.put("data2", paramMap.get("rawdata").toString());
+                Log.i("test", "map = " + localHashMap);
+                OkGo.<String>post(Constant.URL + Constant.WechatFaceAuth)
+                        .upJson(new Gson().toJson(localHashMap))
+                        .headers("Authorization", SPUtils.getInstance().getString("token", ""))
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onSuccess(Response<String> response) {
+                                try {
+                                    String body = response.body();
+                                    Log.i("test", "getAuthInfo :" + body);
+                                    ArgGetAuthInfo result = new Gson().fromJson(body, ArgGetAuthInfo.class);
+                                    if (result.isSuccess()) {
+                                        Constant.authInfo.setAuthinfo(result.getData().getAuthinfo());
+                                        Constant.authInfo.setExpire_time(System.currentTimeMillis());
+                                        //开启一个子线程，定时刷新
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Looper.prepare();
+                                                try {
+//                                                    int millis = Integer.parseInt(result.getData().getExpires_in());
+//                                                    Log.i("test", millis + "");
+                                                    Thread.sleep(24 * 60 * 60 * 1000);
+                                                    getAuthInfo();
+                                                } catch (InterruptedException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                Looper.loop();
+                                            }
+                                        }).start();
+                                    } else {
+                                        ToastUtils.showShort(" Msg = " + result.getMessage());
+                                    }
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    ToastUtils.showShort("初始化失败,请退出重进");
+
+                                }
+                            }
+
+                            @Override
+                            public void onError(Response<String> response) {
+                                super.onError(response);
+                                ToastUtils.showShort("初始化失败,请退出重进");
+                            }
+                        });
+            }
+        });
+
+    }
+
 
 }

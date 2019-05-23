@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="290dp"
+    android:layout_width="match_parent"
     android:layout_height="290dp"
     android:background="@drawable/dialog_bg_shape"
     android:orientation="vertical">
@@ -34,7 +34,7 @@
             android:textSize="12sp" />
 
         <EditText
-            android:id="@+id/et_phone_num"
+            android:id="@+id/et_name"
             android:layout_width="0dp"
             android:layout_height="22dp"
             android:layout_weight="36"
@@ -69,6 +69,7 @@
             android:orientation="horizontal">
 
             <RadioButton
+                android:id="@+id/rb_man"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
@@ -77,6 +78,7 @@
                 android:textSize="12sp" />
 
             <RadioButton
+                android:id="@+id/rb_women"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -106,6 +108,7 @@
             android:textSize="12sp" />
 
         <EditText
+            android:id="@+id/et_phone"
             android:layout_width="0dp"
             android:layout_height="22dp"
             android:layout_weight="36"
@@ -134,14 +137,35 @@
             android:textColor="@color/title_color"
             android:textSize="12sp" />
 
-        <EditText
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="22dp"
-            android:layout_weight="36"
-            android:background="@drawable/common_backgroud_black_shape"
-            android:hint="请输入手机号"
-            android:paddingLeft="5dp"
-            android:textSize="10sp" />
+            android:layout_weight="36">
+
+            <Spinner
+
+                android:id="@+id/sp_one1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/common_backgroud_black_shape" />
+
+            <Spinner
+                android:id="@+id/sp_two1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/common_backgroud_black_shape" />
+
+
+            <Spinner
+                android:id="@+id/sp_three1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/common_backgroud_black_shape" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -168,24 +192,66 @@
             android:layout_height="22dp"
             android:layout_weight="36">
 
-            <Spinner
-                android:id="@+id/sp_one"
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/common_backgroud_black_shape">
 
-            <Spinner
-                android:id="@+id/sp_two"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="3dp"
-                android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/tv_one"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:textSize="8sp" />
 
-            <Spinner
-                android:id="@+id/sp_three"
+                <Spinner
+                    android:id="@+id/sp_one"
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/common_backgroud_black_shape">
+
+                <TextView
+                    android:id="@+id/tv_two"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:textSize="8sp" />
+
+                <Spinner
+                    android:id="@+id/sp_two"
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/common_backgroud_black_shape">
+
+                <TextView
+                    android:id="@+id/tv_three"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:textSize="8sp" />
+
+                <Spinner
+                    android:id="@+id/sp_three"
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
 
         </LinearLayout>
 
@@ -209,6 +275,7 @@
             android:textSize="12sp" />
 
         <EditText
+            android:id="@+id/et_adress_detail"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="36"
@@ -240,6 +307,7 @@
 
 
         <EditText
+            android:id="@+id/et_membercode"
             android:layout_width="0dp"
             android:layout_height="22dp"
             android:layout_weight="36"
@@ -258,7 +326,7 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/common_backgroud_shape"
         android:gravity="center"
-        android:text="筛选"
+        android:text="确定"
         android:textColor="@color/white"
         android:textSize="10sp" />
 </LinearLayout>

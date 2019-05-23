@@ -10,14 +10,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.ToastUtils;
+import com.comersss.modeltwo.Constant;
 import com.comersss.modeltwo.R;
 import com.comersss.modeltwo.adapter.MemberAdapter;
 import com.comersss.modeltwo.bean.MemberBean;
+import com.comersss.modeltwo.bean.ResultBase;
 import com.comersss.modeltwo.dialog.member.MemberAddDialog;
 import com.comersss.modeltwo.dialog.member.MemberRechargeDialog;
 import com.comersss.modeltwo.dialog.member.MemberScreenDialog;
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -52,6 +61,7 @@ public class StatementFragment extends BaseFragment {
     RecyclerView memberRecyclerview;
 
     Unbinder unbinder;
+    private HashMap<Object, Object> localHashMap;
 
     @Override
     public void onAttach(Context context) {
@@ -79,6 +89,9 @@ public class StatementFragment extends BaseFragment {
         beanList.add(new MemberBean("113"));
         beanList.add(new MemberBean("114"));
         memberAdapter.setNewData(beanList);
+
+        queryMemberStatistics();
+        getMemberList();
     }
 
 
@@ -99,18 +112,90 @@ public class StatementFragment extends BaseFragment {
     @OnClick({R.id.tv_member_charge, R.id.tv_member_screen, R.id.tv_member_add})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            //会员充值
             case R.id.tv_member_charge:
                 MemberRechargeDialog memberRechargeDialog = new MemberRechargeDialog(getContext());
                 memberRechargeDialog.show();
                 break;
+            //会员筛选
             case R.id.tv_member_screen:
                 MemberScreenDialog memberScreenDialog = new MemberScreenDialog(getContext());
                 memberScreenDialog.show();
                 break;
+            //新增会员
             case R.id.tv_member_add:
                 MemberAddDialog memberAddDialog = new MemberAddDialog(getContext());
                 memberAddDialog.show();
                 break;
         }
     }
+
+
+    //获取会员统计
+    private void queryMemberStatistics() {
+        OkGo.<String>post(Constant.URL + Constant.QueryMemberStatistics)
+                .headers("Authorization", SPUtils.getInstance().getString("token", ""))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            ResultBase resultGetOrder = new Gson().fromJson(body, ResultBase.class);
+                            if (resultGetOrder.isSuccess()) {
+                                ToastUtils.showShort(resultGetOrder.getMessage());
+                            } else {
+                                ToastUtils.showShort(resultGetOrder.getMessage());
+                            }
+                            Log.i("test", "queryMemberStatistics :" + body);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            ToastUtils.showShort("查询失败，请重试");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        ToastUtils.showShort("查询失败，请重试");
+                    }
+                });
+    }
+
+
+    private void getMemberList() {
+        localHashMap = new HashMap<>();
+        localHashMap.put("pageIndex", 1);
+        localHashMap.put("pageSize", 10);
+        OkGo.<String>post(Constant.URL + Constant.QueryMembers)
+                .upJson(new Gson().toJson(localHashMap))
+                .headers("Authorization", SPUtils.getInstance().getString("token", ""))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            ResultBase resultGetOrder = new Gson().fromJson(body, ResultBase.class);
+                            if (resultGetOrder.isSuccess()) {
+                                ToastUtils.showShort(resultGetOrder.getMessage());
+                            } else {
+                                ToastUtils.showShort(resultGetOrder.getMessage());
+                            }
+                            Log.i("test", "getMemberList :" + body);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            ToastUtils.showShort("查询失败，请重试");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        ToastUtils.showShort("查询失败，请重试");
+                    }
+                });
+    }
+
+
 }

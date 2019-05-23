@@ -4,8 +4,11 @@ package com.comersss.modeltwo.dialog.member;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 
+import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
 
 /**
@@ -17,46 +20,50 @@ public class MemberItemInfoDialog extends Dialog {
 
     private Context mContext;
 
-    public interface OnOkClickListener {
-        void onOkClick();
-    }
-
-    private OnOkClickListener onOkClickListener;
-
-    public void setOnOkClickListener(OnOkClickListener onOkClickListener) {
-        this.onOkClickListener = onOkClickListener;
-    }
-
     public MemberItemInfoDialog(Context context) {
         super(context);
         this.mContext = context;
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.member_info_item_dialog);
-
-//        TextView tvConfirm = findViewById(R.id.tv_parm1);
-//        TextView tvCancle = findViewById(R.id.tv_parm2);
-//
-//        tvConfirm.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (onOkClickListener != null)
-//                    onOkClickListener.onOkClick();
-//            }
-//        });
-//        tvCancle.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dismiss();
-//            }
-//        });
+        initView();
         setCancelable(true);
         setCanceledOnTouchOutside(true);
+
+    }
+
+    private void initView() {
+
+        TextView tv_dongjie = findViewById(R.id.tv_dongjie);
+        TextView tv_jiedong = findViewById(R.id.tv_jiedong);
+        TextView tv_update = findViewById(R.id.tv_update);
+
+        tv_dongjie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
+        tv_jiedong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
+
+        tv_update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
 
     }
 
