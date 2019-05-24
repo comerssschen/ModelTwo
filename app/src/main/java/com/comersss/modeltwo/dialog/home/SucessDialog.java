@@ -4,6 +4,7 @@ package com.comersss.modeltwo.dialog.home;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
@@ -27,13 +28,7 @@ public class SucessDialog extends Dialog {
     private String stateStr;
     private TextView tvState;
 
-
-    public SucessDialog(Context context) {
-        super(context);
-        this.context = context;
-    }
-
-    public SucessDialog(Context context,String content,String stateStr) {
+    public SucessDialog(Context context, String content, String stateStr) {
         super(context);
         this.context = context;
         this.content = content;
@@ -55,7 +50,7 @@ public class SucessDialog extends Dialog {
             helper.stop();
             helper = null;
         }
-        helper = new CountDownConfrimHelper(tvClose, 10, 1);
+        helper = new CountDownConfrimHelper(tvClose, 5, 1);
         helper.setOnFinishListener(new CountDownConfrimHelper.OnFinishListener() {
             @Override
             public void fin() {
@@ -70,6 +65,8 @@ public class SucessDialog extends Dialog {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.sucess_dialog);
+        Window dialogWindow = getWindow();
+        dialogWindow.setGravity(Gravity.CENTER);
 
         tvState = findViewById(R.id.tv_state);
         tvTitle = findViewById(R.id.tv_title);

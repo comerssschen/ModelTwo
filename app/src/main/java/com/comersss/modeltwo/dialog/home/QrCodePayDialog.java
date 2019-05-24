@@ -7,7 +7,9 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -83,6 +85,8 @@ public class QrCodePayDialog extends Dialog {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.qrcode_pay_dialog);
+        Window dialogWindow = getWindow();
+        dialogWindow.setGravity(Gravity.CENTER);
         etScan = findViewById(R.id.et_scan);
         etScan.requestFocus();
         etScan.addTextChangedListener(new TextWatcher() {

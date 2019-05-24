@@ -10,12 +10,48 @@ import com.blankj.utilcode.util.SPUtils;
  */
 public class WebAppInterface {
     @JavascriptInterface
-    public String getToken() {
+    public String GetToken() {
         return SPUtils.getInstance().getString("token", "");
     }
 
     @JavascriptInterface
-    public void method2(String param1, String param2) {
-        // do something
+    public String GetDevice() {
+        return "APP";
+    }
+
+
+    @JavascriptInterface
+    public String GetOption() {
+        return "";
+    }
+
+    @JavascriptInterface
+    public void SaveOption(String option) {
+        return;
+    }
+
+    @JavascriptInterface
+    public void Recv() {
+        return;
+    }
+
+    @JavascriptInterface
+    public void Member() {
+        return;
+    }
+
+    @JavascriptInterface
+    public void Statistics() {
+        return;
+    }
+
+    @JavascriptInterface
+    public void Setting() {
+        return;
+    }
+
+    @JavascriptInterface
+    public void ExitApp() {
+        return;
     }
 }

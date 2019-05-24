@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
@@ -22,6 +23,8 @@ import com.comersss.modeltwo.dialog.home.SucessDialog;
 
 import java.math.BigDecimal;
 
+import static com.lzy.okgo.utils.HttpUtils.runOnUiThread;
+
 /**
  * 作者：create by comersss on 2019/4/4 15:38
  * 邮箱：904359289@qq.com
@@ -33,8 +36,8 @@ public class MemberItemRechargeDialog extends Dialog {
     private MemberListResult.DataBeanX.DataBean memberBean;
     private EditText et_money;
     private String paymoney;
-    private String money;
     private QrCodePayDialog qrCodePayDialog;
+    private String money;
 
     public interface OnOkClickListener {
         void onOkClick();
@@ -58,10 +61,10 @@ public class MemberItemRechargeDialog extends Dialog {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.member_recharge_item_dialog);
-
+        Window dialogWindow = getWindow();
+        dialogWindow.setGravity(Gravity.CENTER);
         TextView tv_content = findViewById(R.id.tv_content);
-        tv_content.setText(memberBean.getId());
-
+        tv_content.setText("姓名： " + memberBean.getName() + "等级：" + memberBean.getMemberLevelName() + "余额：" + memberBean.getBalance() + "元");
         et_money = findViewById(R.id.et_money);
 
         LinearLayout ll_scan = findViewById(R.id.ll_scan);
@@ -71,10 +74,17 @@ public class MemberItemRechargeDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 if (verifyMoney()) {
-                    NetUtil.getInstance().getOrder(money, memberBean.getId(), new BaseResultLitener() {
+                    NetUtil.getInstance().getOrder(1, money, memberBean.getId(), new BaseResultLitener() {
                         @Override
                         public void sucess(String serverRetData) {
-                            showSucessDialog(money);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showSucessDialog(paymoney);
+                                    dismiss();
+                                }
+                            });
+
                         }
 
                         @Override
@@ -94,11 +104,11 @@ public class MemberItemRechargeDialog extends Dialog {
                     qrCodePayDialog.setOnOkClickListener(new QrCodePayDialog.OnOkClickListener() {
                         @Override
                         public void onResult(String result) {
-                            NetUtil.getInstance().Recharge(memberBean.getId(), money, result, "", "", new BaseResultLitener() {
+                            NetUtil.getInstance().Recharge(memberBean.getId(), paymoney, result, "", "", "", new BaseResultLitener() {
                                 @Override
                                 public void sucess(String serverRetData) {
                                     qrCodePayDialog.dismiss();
-                                    showSucessDialog(money);
+                                    showSucessDialog(paymoney);
                                 }
 
                                 @Override
@@ -111,6 +121,7 @@ public class MemberItemRechargeDialog extends Dialog {
                     });
                     if (!qrCodePayDialog.isShowing()) {
                         qrCodePayDialog.setContent(paymoney + "元");
+                        dismiss();
                         qrCodePayDialog.show();
                     }
                 }
@@ -150,7 +161,6 @@ public class MemberItemRechargeDialog extends Dialog {
 
     private void showfailDialog() {
         SucessDialog dialog = new SucessDialog(mContext, "", "充值失败");
-        dialog.setContent("");
         dialog.show();
     }
 

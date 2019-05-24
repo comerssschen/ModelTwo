@@ -28,7 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="24dp"
-            android:text="姓名：张三  等级：钻石  余额：100元"
             android:textColor="@color/title_color"
             android:textSize="8sp" />
 

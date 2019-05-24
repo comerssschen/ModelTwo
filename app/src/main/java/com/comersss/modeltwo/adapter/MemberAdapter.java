@@ -23,11 +23,9 @@ public class MemberAdapter extends BaseQuickAdapter<MemberListResult.DataBeanX.D
         helper.setText(R.id.tv_name, item.getName());
         helper.setText(R.id.tv_grade, item.getMemberLevelName());
         helper.setText(R.id.tv_phone, item.getPhoneNum());
-        helper.setText(R.id.tv_intergral, item.getId() + "");
-        helper.setText(R.id.tv_cost_money, item.getConsumePrice() + "");
-        helper.setText(R.id.tv_remain_money, item.getRechargePrice() + "");
-        helper.setText(R.id.tv_time, item.getCreateTime());
-        helper.setText(R.id.tv_state, item.isIsLocked() ? "正常" : "冻结");
+        helper.setText(R.id.tv_sex, item.isSex() ? "男" : "女");
+        helper.setText(R.id.tv_cost_money, item.getBalance() + "");
+        helper.setText(R.id.tv_state, item.isIsLocked() ? "冻结" : "正常");
         helper.addOnClickListener(R.id.tv_member_charge);
         helper.addOnClickListener(R.id.tv_member_screen);
 

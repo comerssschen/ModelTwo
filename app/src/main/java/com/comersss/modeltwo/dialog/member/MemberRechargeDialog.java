@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
@@ -23,6 +24,8 @@ import com.comersss.modeltwo.dialog.home.QrCodePayDialog;
 import com.comersss.modeltwo.dialog.home.SucessDialog;
 
 import java.math.BigDecimal;
+
+import static com.lzy.okgo.utils.HttpUtils.runOnUiThread;
 
 /**
  * 作者：create by comersss on 2019/4/4 15:38
@@ -50,7 +53,8 @@ public class MemberRechargeDialog extends Dialog {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.member_recharge_dialog);
-
+        Window dialogWindow = getWindow();
+        dialogWindow.setGravity(Gravity.CENTER);
         initView();
         setCancelable(true);
         setCanceledOnTouchOutside(true);
@@ -111,10 +115,17 @@ public class MemberRechargeDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 if (verifyMoney()) {
-                    NetUtil.getInstance().getOrder(money, memberid, new BaseResultLitener() {
+                    NetUtil.getInstance().getOrder(1,money, memberid, new BaseResultLitener() {
                         @Override
                         public void sucess(String serverRetData) {
-                            showSucessDialog(money);
+                            dismiss();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showSucessDialog(paymoney);
+                                }
+                            });
+
                         }
 
                         @Override
@@ -134,11 +145,12 @@ public class MemberRechargeDialog extends Dialog {
                     qrCodePayDialog.setOnOkClickListener(new QrCodePayDialog.OnOkClickListener() {
                         @Override
                         public void onResult(String result) {
-                            NetUtil.getInstance().Recharge(memberid, money, result, "", "", new BaseResultLitener() {
+                            NetUtil.getInstance().Recharge(memberid, paymoney, result, "", "", "", new BaseResultLitener() {
                                 @Override
                                 public void sucess(String serverRetData) {
+                                    dismiss();
                                     qrCodePayDialog.dismiss();
-                                    showSucessDialog(money);
+                                    showSucessDialog(paymoney);
                                 }
 
                                 @Override

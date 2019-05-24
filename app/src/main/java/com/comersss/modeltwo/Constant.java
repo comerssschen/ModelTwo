@@ -7,22 +7,27 @@ package com.comersss.modeltwo;
 public class Constant {
 
 
-//        public static final String URL = "http://api.pay.360yunpay.com";//正式
-    public static final String URL = "http://api.test.360yunpay.com";//测试
+    public static final String URL = "http://api.pay.360yunpay.com";//正式
+    //    public static final String URL = "http://api.test.360yunpay.com";//测试
     public static String appid = "wx2b975c0ca94a6154";
     public static String mch_id = "1440771702";
     public static String sub_mch_id = "1531015161";
     public static AuthInfo authInfo = new AuthInfo();
 
+    //人脸支付
+    public static final String Consume = "/api/MemberApi/Consume";
+
+    //获取会员等级列表
+    public static final String QueryMemberLevels = "/api/MemberApi/QueryMemberLevels";
 
     //获取订单号
-    public static final String GenerateOrderNum = "/api/FacePayApi/GenerateOrderNum";
+    public static final String GenerateOrderNum = "/api/PayApi/GenerateOrderNum";
 
     //获取authinfo
-    public static final String WechatFaceAuth = "/api/FacePayApi/WechatFaceAuth";
+    public static final String WechatFaceAuth = "/api/PayApi/WechatFaceAuth";
 
     //人脸支付
-    public static final String WechatFacePay = "/api/FacePayApi/WechatFacePay";
+    public static final String WechatFacePay = "/api/PayApi/WechatFacePay";
 
     //登陆
     public static final String Login = "/api/PayApi/Login";
@@ -65,9 +70,6 @@ public class Constant {
 
     //会员充值
     public static final String Recharge = "/api/MemberApi/Recharge";
-
-    //会员消费
-    public static final String Consume = "/api/MemberApi/Consume";
 
     //获取会员统计
     public static final String QueryMemberStatistics = "/api/MemberApi/QueryMemberStatistics";

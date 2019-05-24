@@ -17,6 +17,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.comersss.modeltwo.Listener.MemberResultLitener;
 import com.comersss.modeltwo.Listener.BaseResultLitener;
+import com.comersss.modeltwo.Listener.RefreshLitener;
 import com.comersss.modeltwo.Listener.TopCountLitener;
 import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
@@ -51,8 +52,6 @@ public class MemberFragment extends BaseFragment {
     TextView tvLastweekMember;
     @BindView(R.id.tv_member_charge)
     TextView tvMemberCharge;
-    @BindView(R.id.tv_member_screen)
-    TextView tvMemberScreen;
     @BindView(R.id.tv_member_add)
     TextView tvMemberAdd;
     @BindView(R.id.member_recyclerview)
@@ -100,7 +99,12 @@ public class MemberFragment extends BaseFragment {
                     memberItemRechargeDialog = new MemberItemRechargeDialog(getContext(), memberBean);
                     memberItemRechargeDialog.show();
                 } else if (view.getId() == R.id.tv_member_screen) {
-                    memberItemInfoDialog = new MemberItemInfoDialog(getContext(), memberBean);
+                    memberItemInfoDialog = new MemberItemInfoDialog(getContext(), position, memberBean, new RefreshLitener() {
+                        @Override
+                        public void refresh(int position) {
+                            refreshRecle();
+                        }
+                    });
                     memberItemInfoDialog.show();
                 }
             }
@@ -209,18 +213,13 @@ public class MemberFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.tv_member_charge, R.id.tv_member_screen, R.id.tv_member_add})
+    @OnClick({R.id.tv_member_charge, R.id.tv_member_add})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             //会员充值
             case R.id.tv_member_charge:
                 MemberRechargeDialog memberRechargeDialog = new MemberRechargeDialog(getContext());
                 memberRechargeDialog.show();
-                break;
-            //会员筛选
-            case R.id.tv_member_screen:
-                MemberScreenDialog memberScreenDialog = new MemberScreenDialog(getContext());
-                memberScreenDialog.show();
                 break;
             //新增会员
             case R.id.tv_member_add:

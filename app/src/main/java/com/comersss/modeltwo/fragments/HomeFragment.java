@@ -60,12 +60,8 @@ public class HomeFragment extends BaseFragment {
     Unbinder unbinder;
     private String paymoney;
     private String money;
+    private int memberid = 0;
 
-    private String appid = "wx2b975c0ca94a6154";
-    private String mch_id = "1440771702";
-    private String sub_mch_id = "1531015161";
-    private HashMap localHashMap;
-    private SPUtils spUtils;
     private SucessDialog sucessDialog;
     private View cashFragmentView;
     private PayMoneyDialog payMoneyDialog;
@@ -84,8 +80,6 @@ public class HomeFragment extends BaseFragment {
         Log.i(TAG, "initView");
         unbinder = ButterKnife.bind(this, mChildContentView);
         EditTextUtils.setPriceEditText(paymoneyEdit);
-
-        spUtils = SPUtils.getInstance();
     }
 
     private Handler mHandler = new Handler() {
@@ -94,13 +88,14 @@ public class HomeFragment extends BaseFragment {
             super.handleMessage(msg);
             payMoneyDialog.dismiss();
             if (ObjectUtils.isEmpty(sucessDialog)) {
-                sucessDialog = new SucessDialog(cashFragmentView.getContext());
-                sucessDialog.setContent("收款金额：" + paymoney + "元");
+                sucessDialog = new SucessDialog(mContext, "收款金额：" + paymoney + "元", "收款成功");
             }
             if (!sucessDialog.isShowing()) {
                 sucessDialog.show();
             }
             paymoneyEdit.setText("");
+            memberid = 0;
+            tvContent.setText("");
         }
     };
 
@@ -133,9 +128,8 @@ public class HomeFragment extends BaseFragment {
                 choseMemberDialog.setOnOkClickListener(new ChoseMemberDialog.OnOkClickListener() {
                     @Override
                     public void onOkClick(MemberResult.DataBean dataBean) {
-//                        姓名：张三 余额：100 折扣：9折 优惠：10元
-
-                        tvContent.setText("姓名： " + dataBean.getName() + "  余额：" + dataBean.getBalance() + "元  折扣：");
+                        memberid = dataBean.getId();
+                        tvContent.setText("姓名： " + dataBean.getName() + "  余额：" + dataBean.getBalance() + "元");
                     }
                 });
                 choseMemberDialog.show();
@@ -143,7 +137,6 @@ public class HomeFragment extends BaseFragment {
             case R.id.tv_refund:
                 RefundDialog refundDialog = new RefundDialog(getContext());
                 refundDialog.show();
-                ToastUtils.showShort("退款");
                 break;
             case R.id.ll_scan:
                 if (verifyMoney()) {
@@ -152,7 +145,7 @@ public class HomeFragment extends BaseFragment {
                     payMoneyDialog.setOnOkClickListener(new PayMoneyDialog.OnOkClickListener() {
                         @Override
                         public void onOkClick() {
-                            NetUtil.getInstance().getOrder(money, 0, new BaseResultLitener() {
+                            NetUtil.getInstance().getOrder(0, money, memberid, new BaseResultLitener() {
                                 @Override
                                 public void sucess(String serverRetData) {
                                     Message message = Message.obtain(mHandler);
@@ -180,17 +173,50 @@ public class HomeFragment extends BaseFragment {
                     qrCodePayDialog.setOnOkClickListener(new QrCodePayDialog.OnOkClickListener() {
                         @Override
                         public void onResult(String result) {
-                            NetUtil.getInstance().getQrCodePay(result, money, new BaseResultLitener() {
-                                @Override
-                                public void sucess(String serverRetData) {
-                                    ToastUtils.showShort(serverRetData);
-                                }
+                            if (memberid == 0) {
+                                NetUtil.getInstance().getQrCodePay(result, money, memberid, new BaseResultLitener() {
+                                    @Override
+                                    public void sucess(String serverRetData) {
+                                        qrCodePayDialog.dismiss();
+                                        if (ObjectUtils.isEmpty(sucessDialog)) {
+                                            sucessDialog = new SucessDialog(mContext, "收款金额：" + paymoney + "元", "收款成功");
+                                        }
+                                        if (!sucessDialog.isShowing()) {
+                                            sucessDialog.show();
+                                        }
+                                        paymoneyEdit.setText("");
+                                        memberid = 0;
+                                        tvContent.setText("");
+                                    }
 
-                                @Override
-                                public void fail(String errMsg) {
-                                    ToastUtils.showShort(errMsg);
-                                }
-                            });
+                                    @Override
+                                    public void fail(String errMsg) {
+                                        ToastUtils.showShort(errMsg);
+                                    }
+                                });
+                            } else {
+                                NetUtil.getInstance().Consume(memberid, money, result, "", "", "", new BaseResultLitener() {
+                                    @Override
+                                    public void sucess(String serverRetData) {
+                                        qrCodePayDialog.dismiss();
+                                        if (ObjectUtils.isEmpty(sucessDialog)) {
+                                            sucessDialog = new SucessDialog(mContext, "收款金额：" + paymoney + "元", "收款成功");
+                                        }
+                                        if (!sucessDialog.isShowing()) {
+                                            sucessDialog.show();
+                                        }
+                                        paymoneyEdit.setText("");
+                                        memberid = 0;
+                                        tvContent.setText("");
+                                    }
+
+                                    @Override
+                                    public void fail(String errMsg) {
+                                        ToastUtils.showShort(errMsg);
+                                    }
+                                });
+                            }
+
                         }
                     });
                     if (!qrCodePayDialog.isShowing()) {

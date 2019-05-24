@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
@@ -21,6 +22,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 /**
@@ -55,6 +57,8 @@ public class RefundDialog extends Dialog {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.refund_dialog);
+        Window dialogWindow = getWindow();
+        dialogWindow.setGravity(Gravity.CENTER);
 
         TextView tv_content = findViewById(R.id.tv_content);
         TextView tv_ok = findViewById(R.id.tv_ok);
@@ -94,19 +98,13 @@ public class RefundDialog extends Dialog {
                             String body = response.body();
                             ResultBase resultGetOrder = new Gson().fromJson(body, ResultBase.class);
                             if (resultGetOrder.isSuccess()) {
-                                ToastUtils.showShort(resultGetOrder.getMessage());
-                                showSucessDialog(resultGetOrder.getMessage());
+                                showSucessDialog(resultGetOrder.getData().toString());
                             } else {
-                                ToastUtils.showShort(resultGetOrder.getMessage());
                                 showfailDialog();
                             }
-                            Log.i("test", "getAuthInfo :" + body);
-
                         } catch (Exception e) {
                             e.printStackTrace();
-                            dismiss();
                             showfailDialog();
-                            ToastUtils.showShort("退款失败，请重试");
                         }
                     }
 
@@ -115,20 +113,20 @@ public class RefundDialog extends Dialog {
                         super.onError(response);
                         dismiss();
                         showfailDialog();
-                        ToastUtils.showShort("退款失败，请重试");
                     }
                 });
 
     }
 
     private void showSucessDialog(String money) {
+        BigDecimal minMoney = new BigDecimal(money);
+        money = minMoney.divide(new BigDecimal("100")).toString();
         SucessDialog dialog = new SucessDialog(mContext, "退款金额：" + money + "元", "退款成功");
         dialog.show();
     }
 
     private void showfailDialog() {
         SucessDialog dialog = new SucessDialog(mContext, "", "退款失败");
-        dialog.setContent("");
         dialog.show();
     }
 

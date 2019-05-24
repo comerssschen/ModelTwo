@@ -4,6 +4,7 @@ package com.comersss.modeltwo.dialog.member;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
@@ -40,7 +41,8 @@ public class MemberScreenDialog extends Dialog {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.member_screen_dialog);
-
+        Window dialogWindow = getWindow();
+        dialogWindow.setGravity(Gravity.CENTER);
 //        TextView tvConfirm = findViewById(R.id.tv_parm1);
 //        TextView tvCancle = findViewById(R.id.tv_parm2);
 //

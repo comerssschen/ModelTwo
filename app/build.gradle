@@ -40,5 +40,5 @@ dependencies {
 
 
     implementation files('libs\\wxfacepay-release.aar')
-
+    implementation files('libs/x5.jar')
 }

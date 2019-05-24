@@ -45,15 +45,6 @@
         android:textColor="@color/title_color"
         android:textSize="10sp" />
 
-    <TextView
-        android:id="@+id/tv_intergral"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="10"
-        android:gravity="center"
-        android:text="积分"
-        android:textColor="@color/title_color"
-        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/tv_cost_money"
@@ -61,27 +52,17 @@
         android:layout_height="match_parent"
         android:layout_weight="10"
         android:gravity="center"
-        android:text="消费金额"
+        android:text="金额"
         android:textColor="@color/title_color"
         android:textSize="10sp" />
 
     <TextView
-        android:id="@+id/tv_remain_money"
+        android:id="@+id/tv_sex"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="10"
+        android:layout_weight="8"
         android:gravity="center"
-        android:text="剩余金额"
-        android:textColor="@color/title_color"
-        android:textSize="10sp" />
-
-    <TextView
-        android:id="@+id/tv_time"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="10"
-        android:gravity="center"
-        android:text="充值时间"
+        android:text="性别"
         android:textColor="@color/title_color"
         android:textSize="10sp" />
 

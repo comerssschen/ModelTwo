@@ -4,6 +4,7 @@ package com.comersss.modeltwo.dialog.home;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
@@ -50,6 +51,8 @@ public class ChoseMemberDialog extends Dialog {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.chose_member_dialog);
+        Window dialogWindow = getWindow();
+        dialogWindow.setGravity(Gravity.CENTER);
 
         tv_content = findViewById(R.id.tv_content);
         TextView tv_parm1 = findViewById(R.id.tv_parm1);
@@ -102,6 +105,7 @@ public class ChoseMemberDialog extends Dialog {
                 NetUtil.getInstance().QueryMemberByOpenId(new MemberInfoLitener() {
                     @Override
                     public void sucess(MemberResult.DataBean dataBean) {
+                        mDataBean = dataBean;
                         tv_content.setText("姓名： " + dataBean.getName() + "等级：" + dataBean.getMemberLevelName() + "余额：" + dataBean.getBalance() + "元");
                     }
 
