@@ -17,10 +17,12 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.comersss.modeltwo.Listener.MemberResultLitener;
 import com.comersss.modeltwo.Listener.BaseResultLitener;
+import com.comersss.modeltwo.Listener.TopCountLitener;
 import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
 import com.comersss.modeltwo.adapter.MemberAdapter;
-import com.comersss.modeltwo.bean.MemberBean;
+import com.comersss.modeltwo.bean.ArgTopCountResult;
+import com.comersss.modeltwo.bean.MemberListResult;
 import com.comersss.modeltwo.dialog.member.MemberAddDialog;
 import com.comersss.modeltwo.dialog.member.MemberItemInfoDialog;
 import com.comersss.modeltwo.dialog.member.MemberItemRechargeDialog;
@@ -47,10 +49,6 @@ public class MemberFragment extends BaseFragment {
     TextView tvYestodayMember;
     @BindView(R.id.tv_lastweek_member)
     TextView tvLastweekMember;
-    @BindView(R.id.tv_total_intergral)
-    TextView tvTotalIntergral;
-    @BindView(R.id.tv_canused)
-    TextView tvCanused;
     @BindView(R.id.tv_member_charge)
     TextView tvMemberCharge;
     @BindView(R.id.tv_member_screen)
@@ -97,7 +95,7 @@ public class MemberFragment extends BaseFragment {
         memberAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                MemberBean memberBean = memberAdapter.getData().get(position);
+                MemberListResult.DataBeanX.DataBean memberBean = memberAdapter.getData().get(position);
                 if (view.getId() == R.id.tv_member_charge) {
                     memberItemRechargeDialog = new MemberItemRechargeDialog(getContext(), memberBean);
                     memberItemRechargeDialog.show();
@@ -128,15 +126,17 @@ public class MemberFragment extends BaseFragment {
     }
 
     private void refreahTop() {
-        NetUtil.getInstance().queryMemberStatistics(new BaseResultLitener() {
+        NetUtil.getInstance().queryMemberStatistics(new TopCountLitener() {
             @Override
-            public void sucess(String serverRetData) {
-
+            public void sucess(ArgTopCountResult.DataBean memberBeanList) {
+                tvMemberNum.setText(memberBeanList.getAll() + "个");
+                tvYestodayMember.setText(memberBeanList.getYesterdayDay() + "个");
+                tvLastweekMember.setText(memberBeanList.getLastWeek() + "个");
             }
 
             @Override
             public void fail(String errMsg) {
-
+                ToastUtils.showShort(errMsg);
             }
         });
     }
@@ -146,7 +146,7 @@ public class MemberFragment extends BaseFragment {
         memberAdapter.setEnableLoadMore(false);//这里的作用是防止下拉刷新的时候还可以上拉加载
         NetUtil.getInstance().getMemberList(mNextRequestPage, new MemberResultLitener() {
             @Override
-            public void sucess(List<MemberBean> memberBeanList) {
+            public void sucess(List<MemberListResult.DataBeanX.DataBean> memberBeanList) {
                 setData(true, memberBeanList);
                 memberAdapter.setEnableLoadMore(true);
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -164,7 +164,7 @@ public class MemberFragment extends BaseFragment {
     private void loadMore() {
         NetUtil.getInstance().getMemberList(mNextRequestPage, new MemberResultLitener() {
             @Override
-            public void sucess(List<MemberBean> memberBeanList) {
+            public void sucess(List<MemberListResult.DataBeanX.DataBean> memberBeanList) {
                 boolean isRefresh = mNextRequestPage == 1;
                 setData(isRefresh, memberBeanList);
             }

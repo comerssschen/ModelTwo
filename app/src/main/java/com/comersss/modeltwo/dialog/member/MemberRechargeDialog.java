@@ -15,8 +15,10 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.comersss.modeltwo.Listener.BaseResultLitener;
+import com.comersss.modeltwo.Listener.MemberInfoLitener;
 import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
+import com.comersss.modeltwo.bean.MemberResult;
 import com.comersss.modeltwo.dialog.home.QrCodePayDialog;
 import com.comersss.modeltwo.dialog.home.SucessDialog;
 
@@ -36,7 +38,7 @@ public class MemberRechargeDialog extends Dialog {
     private QrCodePayDialog qrCodePayDialog;
     private String paymoney;
     private String money;
-    private String memberid;
+    private int memberid;
 
     public MemberRechargeDialog(Context context) {
         super(context);
@@ -67,11 +69,11 @@ public class MemberRechargeDialog extends Dialog {
         tv_parm1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NetUtil.getInstance().QueryMemberByOpenId(new BaseResultLitener() {
+                NetUtil.getInstance().QueryMemberByOpenId(new MemberInfoLitener() {
                     @Override
-                    public void sucess(String serverRetData) {
-                        ToastUtils.showShort(serverRetData);
-                        memberid = "";
+                    public void sucess(MemberResult.DataBean dataBean) {
+                        tv_content.setText("姓名： " + dataBean.getName() + "等级：" + dataBean.getMemberLevelName() + "余额：" + dataBean.getBalance() + "元");
+                        memberid = dataBean.getId();
                     }
 
                     @Override
@@ -89,11 +91,11 @@ public class MemberRechargeDialog extends Dialog {
                     ToastUtils.showShort("请输入会员唯一识别码");
                     return;
                 } else {
-                    NetUtil.getInstance().QueryMember(codeStr, new BaseResultLitener() {
+                    NetUtil.getInstance().QueryMember(codeStr, new MemberInfoLitener() {
                         @Override
-                        public void sucess(String serverRetData) {
-                            memberid = "";
-                            tv_content.setText(serverRetData);
+                        public void sucess(MemberResult.DataBean dataBean) {
+                            tv_content.setText("姓名： " + dataBean.getName() + "等级：" + dataBean.getMemberLevelName() + "余额：" + dataBean.getBalance() + "元");
+                            memberid = dataBean.getId();
                         }
 
                         @Override

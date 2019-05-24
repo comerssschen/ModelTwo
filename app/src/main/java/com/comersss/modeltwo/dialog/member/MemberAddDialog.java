@@ -29,7 +29,7 @@ import com.comersss.modeltwo.R;
 import com.comersss.modeltwo.adapter.SpinnerAdapter;
 import com.comersss.modeltwo.adapter.SpinnerThreeAdapter;
 import com.comersss.modeltwo.adapter.SpinnerTwoAdapter;
-import com.comersss.modeltwo.bean.MemberBean;
+import com.comersss.modeltwo.bean.MemberListResult;
 import com.comersss.modeltwo.bean.ProvinceBean;
 import com.comersss.modeltwo.bean.ResultBase;
 import com.google.gson.Gson;
@@ -54,7 +54,7 @@ import java.util.Map;
 public class MemberAddDialog extends Dialog {
 
     private Context mContext;
-    private MemberBean memberBean;
+    private MemberListResult.DataBeanX.DataBean memberBean;
     private String json;
     private String townId;
     private List<ProvinceBean> onedata;
@@ -93,7 +93,7 @@ public class MemberAddDialog extends Dialog {
         this.onOkClickListener = onOkClickListener;
     }
 
-    public MemberAddDialog(Context context, MemberBean memberBean) {
+    public MemberAddDialog(Context context, MemberListResult.DataBeanX.DataBean memberBean) {
         super(context);
         this.mContext = context;
         this.memberBean = memberBean;
@@ -269,7 +269,7 @@ public class MemberAddDialog extends Dialog {
             et_phone.setText(memberBean.getPhoneNum());
             et_adress_detail.setText(memberBean.getAddress());
 
-            if (memberBean.getSex() == 0) {
+            if (memberBean.isSex()) {
                 rb_women.setChecked(true);
                 rb_man.setChecked(false);
             } else {
@@ -344,8 +344,8 @@ public class MemberAddDialog extends Dialog {
         localHashMap.put("Address", adressStr);
 //        localHashMap.put("EntryMode", codeStr);
 //        localHashMap.put("AliUnqueId", codeStr);
-//        localHashMap.put("WechatUnqueId", codeStr);
-        localHashMap.put("MemberLevelId", memberCode);
+        localHashMap.put("WechatUnqueId", memberCode);
+//        localHashMap.put("MemberLevelId", memberCode);
 //        localHashMap.put("IsLocked", codeStr);
 
         OkGo.<String>post(Constant.URL + Constant.AddMember)
@@ -356,11 +356,13 @@ public class MemberAddDialog extends Dialog {
                     public void onSuccess(Response<String> response) {
                         try {
                             String body = response.body();
-                            Log.i("test", "getAuthInfo :" + body);
                             ResultBase resultGetOrder = new Gson().fromJson(body, ResultBase.class);
-
-                            ToastUtils.showShort(resultGetOrder.getMessage());
-
+                            if (resultGetOrder.isSuccess()) {
+                                ToastUtils.showShort(resultGetOrder.getMessage());
+                                dismiss();
+                            } else {
+                                ToastUtils.showShort(resultGetOrder.getMessage());
+                            }
                             if (onOkClickListener != null) {
                                 onOkClickListener.onOkClick();
                             }
@@ -368,14 +370,12 @@ public class MemberAddDialog extends Dialog {
                             e.printStackTrace();
                             ToastUtils.showShort("添加失败，请重试");
                         }
-                        dismiss();
                     }
 
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
                         ToastUtils.showShort("添加失败，请重试");
-                        dismiss();
                     }
                 });
 

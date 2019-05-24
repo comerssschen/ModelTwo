@@ -16,7 +16,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.comersss.modeltwo.Listener.BaseResultLitener;
 import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
-import com.comersss.modeltwo.bean.MemberBean;
+import com.comersss.modeltwo.bean.MemberListResult;
 import com.comersss.modeltwo.dialog.home.QrCodePayDialog;
 import com.comersss.modeltwo.dialog.home.SucessDialog;
 
@@ -30,7 +30,7 @@ import java.math.BigDecimal;
 public class MemberItemRechargeDialog extends Dialog {
 
     private Context mContext;
-    private MemberBean memberBean;
+    private MemberListResult.DataBeanX.DataBean memberBean;
     private EditText et_money;
     private String paymoney;
     private String money;
@@ -46,7 +46,7 @@ public class MemberItemRechargeDialog extends Dialog {
         this.onOkClickListener = onOkClickListener;
     }
 
-    public MemberItemRechargeDialog(Context context, MemberBean memberBean) {
+    public MemberItemRechargeDialog(Context context, MemberListResult.DataBeanX.DataBean memberBean) {
         super(context);
         this.mContext = context;
         this.memberBean = memberBean;

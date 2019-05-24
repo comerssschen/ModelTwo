@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
-import com.comersss.modeltwo.bean.MemberBean;
+import com.comersss.modeltwo.bean.MemberListResult;
 
 /**
  * 作者：create by comersss on 2019/4/4 15:38
@@ -20,9 +20,9 @@ import com.comersss.modeltwo.bean.MemberBean;
 public class MemberItemInfoDialog extends Dialog {
 
     private Context mContext;
-    private MemberBean memberBean;
+    private MemberListResult.DataBeanX.DataBean memberBean;
 
-    public MemberItemInfoDialog(Context context, MemberBean memberBean) {
+    public MemberItemInfoDialog(Context context, MemberListResult.DataBeanX.DataBean memberBean) {
         super(context);
         this.mContext = context;
         this.memberBean = memberBean;
@@ -40,7 +40,6 @@ public class MemberItemInfoDialog extends Dialog {
     }
 
     private void initView() {
-
         TextView tv_dongjie = findViewById(R.id.tv_dongjie);
         TextView tv_jiedong = findViewById(R.id.tv_jiedong);
         TextView tv_update = findViewById(R.id.tv_update);
@@ -48,13 +47,13 @@ public class MemberItemInfoDialog extends Dialog {
         tv_dongjie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NetUtil.getInstance().LockOrUnlockMember(memberBean.getId(), 1);
+                NetUtil.getInstance().LockOrUnlockMember(memberBean.getId()+"", 1);
             }
         });
         tv_jiedong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NetUtil.getInstance().LockOrUnlockMember(memberBean.getId(), 0);
+                NetUtil.getInstance().LockOrUnlockMember(memberBean.getId()+"", 0);
             }
         });
 

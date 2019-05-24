@@ -20,6 +20,7 @@ import com.comersss.modeltwo.EditTextUtils;
 import com.comersss.modeltwo.Listener.BaseResultLitener;
 import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
+import com.comersss.modeltwo.bean.MemberResult;
 import com.comersss.modeltwo.dialog.home.ChoseMemberDialog;
 import com.comersss.modeltwo.dialog.home.PayMoneyDialog;
 import com.comersss.modeltwo.dialog.home.QrCodePayDialog;
@@ -48,6 +49,8 @@ public class HomeFragment extends BaseFragment {
     EditText paymoneyEdit;
     @BindView(R.id.tv_member)
     TextView tvMember;
+    @BindView(R.id.tv_content)
+    TextView tvContent;
     @BindView(R.id.tv_refund)
     TextView tvRefund;
     @BindView(R.id.ll_scan)
@@ -126,8 +129,15 @@ public class HomeFragment extends BaseFragment {
         int start = paymoneyEdit.getSelectionStart();
         switch (view.getId()) {
             case R.id.tv_member:
-//                startActivity(new Intent(getContext(), TestActivity.class));
                 ChoseMemberDialog choseMemberDialog = new ChoseMemberDialog(getContext());
+                choseMemberDialog.setOnOkClickListener(new ChoseMemberDialog.OnOkClickListener() {
+                    @Override
+                    public void onOkClick(MemberResult.DataBean dataBean) {
+//                        姓名：张三 余额：100 折扣：9折 优惠：10元
+
+                        tvContent.setText("姓名： " + dataBean.getName() + "  余额：" + dataBean.getBalance() + "元  折扣：");
+                    }
+                });
                 choseMemberDialog.show();
                 break;
             case R.id.tv_refund:
@@ -142,7 +152,7 @@ public class HomeFragment extends BaseFragment {
                     payMoneyDialog.setOnOkClickListener(new PayMoneyDialog.OnOkClickListener() {
                         @Override
                         public void onOkClick() {
-                            NetUtil.getInstance().getOrder(money, "", new BaseResultLitener() {
+                            NetUtil.getInstance().getOrder(money, 0, new BaseResultLitener() {
                                 @Override
                                 public void sucess(String serverRetData) {
                                     Message message = Message.obtain(mHandler);

@@ -12,10 +12,11 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.comersss.modeltwo.Listener.BaseResultLitener;
+import com.comersss.modeltwo.Listener.MemberInfoLitener;
 import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
+import com.comersss.modeltwo.bean.MemberResult;
 
-import java.util.HashMap;
 
 /**
  * 作者：create by comersss on 2019/4/4 15:38
@@ -24,12 +25,12 @@ import java.util.HashMap;
 public class ChoseMemberDialog extends Dialog {
 
     private Context mContext;
-    private HashMap localHashMap;
+    private MemberResult.DataBean mDataBean;
     private EditText et_code;
     private TextView tv_content;
 
     public interface OnOkClickListener {
-        void onOkClick();
+        void onOkClick(MemberResult.DataBean bean);
     }
 
     private OnOkClickListener onOkClickListener;
@@ -63,8 +64,11 @@ public class ChoseMemberDialog extends Dialog {
         tv_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onOkClickListener != null)
-                    onOkClickListener.onOkClick();
+                dismiss();
+                if (onOkClickListener != null && !ObjectUtils.isEmpty(mDataBean)) {
+                    onOkClickListener.onOkClick(mDataBean);
+                }
+
             }
         });
 
@@ -76,10 +80,11 @@ public class ChoseMemberDialog extends Dialog {
                     ToastUtils.showShort("请输入会员唯一识别码");
                     return;
                 } else {
-                    NetUtil.getInstance().QueryMember(codeStr, new BaseResultLitener() {
+                    NetUtil.getInstance().QueryMember(codeStr, new MemberInfoLitener() {
                         @Override
-                        public void sucess(String serverRetData) {
-                            tv_content.setText(serverRetData);
+                        public void sucess(MemberResult.DataBean dataBean) {
+                            mDataBean = dataBean;
+                            tv_content.setText("姓名： " + dataBean.getName() + "等级：" + dataBean.getMemberLevelName() + "余额：" + dataBean.getBalance() + "元");
                         }
 
                         @Override
@@ -94,10 +99,10 @@ public class ChoseMemberDialog extends Dialog {
         tv_parm1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NetUtil.getInstance().QueryMemberByOpenId(new BaseResultLitener() {
+                NetUtil.getInstance().QueryMemberByOpenId(new MemberInfoLitener() {
                     @Override
-                    public void sucess(String serverRetData) {
-                        tv_content.setText(serverRetData);
+                    public void sucess(MemberResult.DataBean dataBean) {
+                        tv_content.setText("姓名： " + dataBean.getName() + "等级：" + dataBean.getMemberLevelName() + "余额：" + dataBean.getBalance() + "元");
                     }
 
                     @Override
