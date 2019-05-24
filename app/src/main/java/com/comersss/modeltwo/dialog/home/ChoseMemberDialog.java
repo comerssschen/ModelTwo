@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.comersss.modeltwo.Listener.PayResultLitener;
+import com.comersss.modeltwo.Listener.BaseResultLitener;
 import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
 
@@ -76,7 +76,7 @@ public class ChoseMemberDialog extends Dialog {
                     ToastUtils.showShort("请输入会员唯一识别码");
                     return;
                 } else {
-                    NetUtil.getInstance().QueryMember(codeStr, new PayResultLitener() {
+                    NetUtil.getInstance().QueryMember(codeStr, new BaseResultLitener() {
                         @Override
                         public void sucess(String serverRetData) {
                             tv_content.setText(serverRetData);
@@ -94,7 +94,7 @@ public class ChoseMemberDialog extends Dialog {
         tv_parm1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NetUtil.getInstance().QueryMemberByOpenId(new PayResultLitener() {
+                NetUtil.getInstance().QueryMemberByOpenId(new BaseResultLitener() {
                     @Override
                     public void sucess(String serverRetData) {
                         tv_content.setText(serverRetData);

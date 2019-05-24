@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
+import com.comersss.modeltwo.bean.MemberBean;
 
 /**
  * 作者：create by comersss on 2019/4/4 15:38
@@ -19,10 +20,12 @@ import com.comersss.modeltwo.R;
 public class MemberItemInfoDialog extends Dialog {
 
     private Context mContext;
+    private MemberBean memberBean;
 
-    public MemberItemInfoDialog(Context context) {
+    public MemberItemInfoDialog(Context context, MemberBean memberBean) {
         super(context);
         this.mContext = context;
+        this.memberBean = memberBean;
     }
 
     @Override
@@ -45,23 +48,21 @@ public class MemberItemInfoDialog extends Dialog {
         tv_dongjie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
+                NetUtil.getInstance().LockOrUnlockMember(memberBean.getId(), 1);
             }
         });
         tv_jiedong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
+                NetUtil.getInstance().LockOrUnlockMember(memberBean.getId(), 0);
             }
         });
 
         tv_update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
+                MemberAddDialog memberAddDialog = new MemberAddDialog(mContext, memberBean);
+                memberAddDialog.show();
             }
         });
 

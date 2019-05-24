@@ -40,7 +40,9 @@
             android:layout_marginTop="3dp"
             android:background="@drawable/common_backgroud_black_shape"
             android:hint="唯一识别码"
+            android:maxLength="20"
             android:paddingLeft="5dp"
+            android:singleLine="true"
             android:textSize="10sp" />
 
         <LinearLayout

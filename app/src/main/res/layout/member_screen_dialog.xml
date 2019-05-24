@@ -37,7 +37,9 @@
             android:layout_marginLeft="36dp"
             android:background="@drawable/common_backgroud_black_shape"
             android:hint="请输入会员名"
+            android:maxLength="20"
             android:paddingLeft="5dp"
+            android:singleLine="true"
             android:textSize="10sp" />
 
     </LinearLayout>
@@ -63,7 +65,9 @@
             android:layout_marginLeft="36dp"
             android:background="@drawable/common_backgroud_black_shape"
             android:hint="请输入会员名"
+            android:maxLength="20"
             android:paddingLeft="5dp"
+            android:singleLine="true"
             android:textSize="10sp" />
 
     </LinearLayout>

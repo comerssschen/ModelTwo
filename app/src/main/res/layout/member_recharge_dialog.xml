@@ -33,7 +33,9 @@
         android:layout_marginTop="3dp"
         android:background="@drawable/common_backgroud_black_shape"
         android:hint="刷脸唯一识别码/手机号码"
+        android:maxLength="20"
         android:paddingLeft="5dp"
+        android:singleLine="true"
         android:textSize="10sp" />
 
     <TextView
@@ -91,7 +93,10 @@
         android:layout_marginTop="3dp"
         android:background="@drawable/common_backgroud_black_shape"
         android:hint="请输入金额"
+        android:inputType="numberDecimal"
+        android:maxLength="20"
         android:paddingLeft="5dp"
+        android:singleLine="true"
         android:textSize="10sp" />
 
     <LinearLayout

@@ -4,10 +4,8 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <TextView
+    <WebView
+        android:id="@+id/webview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="数据"
-        android:textSize="30sp" />
+        android:layout_height="match_parent" />
 </LinearLayout>

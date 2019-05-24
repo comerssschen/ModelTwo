@@ -13,10 +13,10 @@ import android.widget.RadioGroup;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.comersss.modeltwo.bean.ArgGetAuthInfo;
-import com.comersss.modeltwo.fragments.BossFragment;
-import com.comersss.modeltwo.fragments.CashierPlatformFragment;
-import com.comersss.modeltwo.fragments.MessageFragment;
-import com.comersss.modeltwo.fragments.StatementFragment;
+import com.comersss.modeltwo.fragments.DataFragment;
+import com.comersss.modeltwo.fragments.HomeFragment;
+import com.comersss.modeltwo.fragments.SettingFragment;
+import com.comersss.modeltwo.fragments.MemberFragment;
 import com.comersss.modeltwo.dialog.home.BackPressDialog;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
@@ -29,20 +29,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
- * 主界面
- * Created by cc on 2016/8/2.
- * 邮箱：904359289@QQ.com.
- *
- * */
+/**
+ * 作者：create by comersss on 2019/5/17 17:42
+ * 邮箱：904359289@qq.com
+ * 主页面
+ */
 public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
     public AppContext appContext;
     RadioGroup radiogroup;
     private ArrayList<Fragment> fragments;
-    private CashierPlatformFragment cashierPlatformFragment;
-    private StatementFragment statementFragment;
-    private MessageFragment messageFragment;
-    private BossFragment bossFragment;
+    private HomeFragment homeFragment;
+    private MemberFragment memberFragment;
+    private SettingFragment settingFragment;
+    private DataFragment dataFragment;
     private BackPressDialog backPressDialog;
     private HashMap<Object, Object> localHashMap;
 
@@ -54,14 +53,14 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         appContext = (AppContext) getApplication();
         radiogroup = findViewById(R.id.radiogroup);
         fragments = new ArrayList<>();
-        cashierPlatformFragment = new CashierPlatformFragment();
-        statementFragment = new StatementFragment();
-        bossFragment = new BossFragment();
-        messageFragment = new MessageFragment();
-        fragments.add(cashierPlatformFragment);
-        fragments.add(statementFragment);
-        fragments.add(bossFragment);
-        fragments.add(messageFragment);
+        homeFragment = new HomeFragment();
+        memberFragment = new MemberFragment();
+        dataFragment = new DataFragment();
+        settingFragment = new SettingFragment();
+        fragments.add(homeFragment);
+        fragments.add(memberFragment);
+        fragments.add(dataFragment);
+        fragments.add(settingFragment);
 
         setDefaultFragment(fragments.get(0));
         radiogroup.setOnCheckedChangeListener(this);
@@ -96,6 +95,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         backPressDialog.setOnOkClickListener(new BackPressDialog.OnOkClickListener() {
             @Override
             public void onOkClick() {
+                backPressDialog.dismiss();
                 finish();
             }
         });

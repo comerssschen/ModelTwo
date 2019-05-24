@@ -46,7 +46,9 @@
         android:layout_marginTop="3dp"
         android:background="@drawable/common_backgroud_black_shape"
         android:hint="请扫描/请输入小票上的订单号"
+        android:maxLength="20"
         android:paddingLeft="5dp"
+        android:singleLine="true"
         android:textSize="10sp" />
 
     <TextView
@@ -66,7 +68,10 @@
         android:layout_marginTop="3dp"
         android:background="@drawable/common_backgroud_black_shape"
         android:hint="请管理员输入退款密码"
+        android:maxLength="20"
         android:paddingLeft="5dp"
+        android:password="true"
+        android:singleLine="true"
         android:textSize="10sp" />
 
     <TextView

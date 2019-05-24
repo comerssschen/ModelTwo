@@ -10,11 +10,12 @@ import android.view.ViewGroup;
 
 import com.comersss.modeltwo.R;
 
-/*
- * 接收消息的fragment
- * Created by cc on 2016/7/27.
- * */
-public class MessageFragment extends BaseFragment {
+/**
+ * 作者：create by comersss on 2019/4/4 15:38
+ * 邮箱：904359289@qq.com
+ * 设置
+ */
+public class SettingFragment extends BaseFragment {
 
     @Override
     public void onAttach(Context context) {
@@ -24,7 +25,7 @@ public class MessageFragment extends BaseFragment {
 
     @Override
     protected View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_message, container, false);
+        return inflater.inflate(R.layout.fragment_setting, container, false);
     }
 
     @Override

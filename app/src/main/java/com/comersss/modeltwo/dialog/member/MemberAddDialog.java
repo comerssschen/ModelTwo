@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ import com.comersss.modeltwo.R;
 import com.comersss.modeltwo.adapter.SpinnerAdapter;
 import com.comersss.modeltwo.adapter.SpinnerThreeAdapter;
 import com.comersss.modeltwo.adapter.SpinnerTwoAdapter;
+import com.comersss.modeltwo.bean.MemberBean;
 import com.comersss.modeltwo.bean.ProvinceBean;
 import com.comersss.modeltwo.bean.ResultBase;
 import com.google.gson.Gson;
@@ -52,9 +54,10 @@ import java.util.Map;
 public class MemberAddDialog extends Dialog {
 
     private Context mContext;
+    private MemberBean memberBean;
     private String json;
     private String townId;
-    private List<ProvinceBean> data;
+    private List<ProvinceBean> onedata;
     private List<ProvinceBean> twodata;
     private List<ProvinceBean> threedata = new ArrayList<>();
     private Spinner sp_one;
@@ -77,6 +80,8 @@ public class MemberAddDialog extends Dialog {
     private int currentMonth;
     private ArrayList<String> monthData;
     private int currentDay;
+    private LinearLayout ll_code;
+    private LinearLayout ll_pwd;
 
     public interface OnOkClickListener {
         void onOkClick();
@@ -88,11 +93,11 @@ public class MemberAddDialog extends Dialog {
         this.onOkClickListener = onOkClickListener;
     }
 
-    public MemberAddDialog(Context context) {
+    public MemberAddDialog(Context context, MemberBean memberBean) {
         super(context);
         this.mContext = context;
+        this.memberBean = memberBean;
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,13 +112,95 @@ public class MemberAddDialog extends Dialog {
         lp.width = (int) (display.getWidth() * 0.9); // 宽度
         dialogWindow.setAttributes(lp);
         initView();
-        initDate();
         setCancelable(true);
         setCanceledOnTouchOutside(true);
 
     }
 
-    private void initDate() {
+    private void initView() {
+        TextView tv_scan = findViewById(R.id.tv_scan);
+        tv_scan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                et_membercode.setText(NetUtil.getInstance().getOpenId());
+            }
+        });
+        TextView tv_button = findViewById(R.id.tv_button);
+        tv_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Save();
+            }
+        });
+        ll_code = findViewById(R.id.ll_code);
+        ll_pwd = findViewById(R.id.ll_pwd);
+        rb_man = findViewById(R.id.rb_man);
+        rb_women = findViewById(R.id.rb_women);
+        et_name = findViewById(R.id.et_name);
+        et_phone = findViewById(R.id.et_phone);
+        et_adress_detail = findViewById(R.id.et_adress_detail);
+        et_membercode = findViewById(R.id.et_membercode);
+
+        sp_one = findViewById(R.id.sp_one);
+        sp_two = findViewById(R.id.sp_two);
+        sp_three = findViewById(R.id.sp_three);
+
+        try {
+            json = ConvertUtils.inputStream2String(mContext.getAssets().open("map222.json"), "utf-8");
+            parmOne = new Gson().fromJson(json, Map.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        onedata = getData("100000");
+        SpinnerAdapter oneAdapter = new SpinnerAdapter(mContext, onedata);
+        sp_one.setAdapter(oneAdapter);
+        sp_one.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                twodata = getData(onedata.get(position).getId());
+                twoAdapter.setData(twodata);
+                threedata = getData(twodata.get(0).getId());
+                threeAdapter.setData(threedata);
+                townId = threedata.get(0).getId();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        twoAdapter = new SpinnerTwoAdapter(mContext, twodata);
+        sp_two.setAdapter(twoAdapter);
+        sp_two.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                threedata = getData(twodata.get(position).getId());
+                threeAdapter.setData(threedata);
+                townId = threedata.get(0).getId();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        threeAdapter = new SpinnerThreeAdapter(mContext, threedata);
+        sp_three.setAdapter(threeAdapter);
+        sp_three.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ToastUtils.showShort(threedata.get(position).getName());
+                townId = threedata.get(position).getId();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String[] split = sdf.format(new Date()).split("-");
         currentYear = Integer.parseInt(split[0]);
@@ -166,7 +253,6 @@ public class MemberAddDialog extends Dialog {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 currentDay = Integer.parseInt(dayData.get(position));
-                ToastUtils.showShort(currentYear + "," + currentMonth + "," + currentDay);
             }
 
             @Override
@@ -174,88 +260,62 @@ public class MemberAddDialog extends Dialog {
 
             }
         });
-    }
 
-    private void initView() {
-        TextView tv_scan = findViewById(R.id.tv_scan);
-        tv_scan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                et_membercode.setText(NetUtil.getInstance().getOpenId());
+
+        if (!ObjectUtils.isEmpty(memberBean)) {
+            ll_code.setVisibility(View.GONE);
+            ll_pwd.setVisibility(View.VISIBLE);
+            et_name.setText(memberBean.getId());
+            et_phone.setText(memberBean.getPhoneNum());
+            et_adress_detail.setText(memberBean.getAddress());
+
+            if (memberBean.getSex() == 0) {
+                rb_women.setChecked(true);
+                rb_man.setChecked(false);
+            } else {
+                rb_women.setChecked(false);
+                rb_man.setChecked(true);
             }
-        });
-        TextView tv_button = findViewById(R.id.tv_button);
-        tv_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Save();
+
+            String[] value = memberBean.getBirthday().split("-");
+            for (int i = 0; i < yearData.size(); i++) {
+                if (ObjectUtils.equals(yearData.get(i), value[0])) {
+                    sp_one1.setSelection(i);
+                }
             }
-        });
+            for (int i = 0; i < monthData.size(); i++) {
+                if (ObjectUtils.equals(monthData.get(i), value[1])) {
+                    sp_two1.setSelection(i);
+                }
+            }
+            for (int i = 0; i < dayData.size(); i++) {
+                if (ObjectUtils.equals(dayData.get(i), value[2])) {
+                    sp_three1.setSelection(i);
+                }
+            }
 
-        rb_man = findViewById(R.id.rb_man);
-        rb_women = findViewById(R.id.rb_women);
-        et_name = findViewById(R.id.et_name);
-        et_phone = findViewById(R.id.et_phone);
-        et_adress_detail = findViewById(R.id.et_adress_detail);
-        et_membercode = findViewById(R.id.et_membercode);
+            for (int i = 0; i < onedata.size(); i++) {
+                if (onedata.get(i).getId().startsWith(memberBean.getAddressCode().substring(0, 2))) {
+                    sp_one.setSelection(i);
+                    twodata = getData(onedata.get(i).getId());
+                    twoAdapter.setData(twodata);
+                }
+            }
+            for (int i = 0; i < twodata.size(); i++) {
+                if (twodata.get(i).getId().startsWith(memberBean.getAddressCode().substring(0, 4))) {
+                    sp_two.setSelection(i);
+                    threedata = getData(twodata.get(i).getId());
+                    threeAdapter.setData(threedata);
+                }
+            }
 
-        sp_one = findViewById(R.id.sp_one);
-        sp_two = findViewById(R.id.sp_two);
-        sp_three = findViewById(R.id.sp_three);
+            for (int i = 0; i < threedata.size(); i++) {
+                if (threedata.get(i).getId().equals(memberBean.getAddressCode().substring(0, 6))) {
+                    sp_three.setSelection(i);
+                }
+            }
 
-        try {
-            json = ConvertUtils.inputStream2String(mContext.getAssets().open("map222.json"), "utf-8");
-            parmOne = new Gson().fromJson(json, Map.class);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-
-        data = getData("100000");
-        SpinnerAdapter oneAdapter = new SpinnerAdapter(mContext, data);
-        sp_one.setAdapter(oneAdapter);
-        sp_one.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                twodata = getData(data.get(position).getId());
-                twoAdapter.setData(twodata);
-                threedata.clear();
-                threeAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        twoAdapter = new SpinnerTwoAdapter(mContext, twodata);
-        sp_two.setAdapter(twoAdapter);
-        sp_two.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                threedata = getData(twodata.get(position).getId());
-                threeAdapter.setData(threedata);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        threeAdapter = new SpinnerThreeAdapter(mContext, threedata);
-        sp_three.setAdapter(threeAdapter);
-        sp_three.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ToastUtils.showShort(threedata.get(position).getName());
-                townId = threedata.get(position).getId();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
     }
 
     private void Save() {
@@ -301,6 +361,9 @@ public class MemberAddDialog extends Dialog {
 
                             ToastUtils.showShort(resultGetOrder.getMessage());
 
+                            if (onOkClickListener != null) {
+                                onOkClickListener.onOkClick();
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                             ToastUtils.showShort("添加失败，请重试");
@@ -354,7 +417,11 @@ public class MemberAddDialog extends Dialog {
     private ArrayList<String> getMonthData() {
         ArrayList<String> list = new ArrayList<>();
         for (int i = 1; i <= 12; i++) {
-            list.add(String.valueOf(i));
+            String value = String.valueOf(i);
+            if (value.length() == 1) {
+                value = "0" + value;
+            }
+            list.add(value);
         }
         return list;
     }
@@ -364,7 +431,11 @@ public class MemberAddDialog extends Dialog {
         //ignore condition
         ArrayList<String> list = new ArrayList<>();
         for (int i = 1; i <= lastDay; i++) {
-            list.add(String.valueOf(i));
+            String value = String.valueOf(i);
+            if (value.length() == 1) {
+                value = "0" + value;
+            }
+            list.add(value);
         }
         return list;
     }

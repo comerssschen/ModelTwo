@@ -17,7 +17,7 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.comersss.modeltwo.EditTextUtils;
-import com.comersss.modeltwo.Listener.PayResultLitener;
+import com.comersss.modeltwo.Listener.BaseResultLitener;
 import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
 import com.comersss.modeltwo.dialog.home.ChoseMemberDialog;
@@ -37,10 +37,11 @@ import butterknife.Unbinder;
 
 
 /**
- * 收银主页
- * Created by cc on 2016/9/19.
+ * 作者：create by comersss on 2019/4/4 15:38
+ * 邮箱：904359289@qq.com
+ * 首页
  */
-public class CashierPlatformFragment extends BaseFragment {
+public class HomeFragment extends BaseFragment {
 
     private static final String TAG = "test";
     @BindView(R.id.paymoney_edit)
@@ -71,7 +72,7 @@ public class CashierPlatformFragment extends BaseFragment {
     @Override
     protected View createView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(TAG, "createView");
-        cashFragmentView = inflater.inflate(R.layout.fragment_cashier_platform, container, false);
+        cashFragmentView = inflater.inflate(R.layout.fragment_home, container, false);
         return cashFragmentView;
     }
 
@@ -141,7 +142,7 @@ public class CashierPlatformFragment extends BaseFragment {
                     payMoneyDialog.setOnOkClickListener(new PayMoneyDialog.OnOkClickListener() {
                         @Override
                         public void onOkClick() {
-                            NetUtil.getInstance().getOrder(money, new PayResultLitener() {
+                            NetUtil.getInstance().getOrder(money, "", new BaseResultLitener() {
                                 @Override
                                 public void sucess(String serverRetData) {
                                     Message message = Message.obtain(mHandler);
@@ -169,7 +170,7 @@ public class CashierPlatformFragment extends BaseFragment {
                     qrCodePayDialog.setOnOkClickListener(new QrCodePayDialog.OnOkClickListener() {
                         @Override
                         public void onResult(String result) {
-                            NetUtil.getInstance().getQrCodePay(result, money, new PayResultLitener() {
+                            NetUtil.getInstance().getQrCodePay(result, money, new BaseResultLitener() {
                                 @Override
                                 public void sucess(String serverRetData) {
                                     ToastUtils.showShort(serverRetData);

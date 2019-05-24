@@ -4,6 +4,7 @@ package com.comersss.modeltwo.dialog.member;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -13,7 +14,7 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.comersss.modeltwo.Listener.PayResultLitener;
+import com.comersss.modeltwo.Listener.BaseResultLitener;
 import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
 import com.comersss.modeltwo.dialog.home.QrCodePayDialog;
@@ -55,10 +56,8 @@ public class MemberRechargeDialog extends Dialog {
     }
 
     private void initView() {
-
         et_code = findViewById(R.id.et_code);
         et_money = findViewById(R.id.et_money);
-
         tv_content = findViewById(R.id.tv_content);
         TextView tv_parm1 = findViewById(R.id.tv_parm1);
         TextView tv_parm2 = findViewById(R.id.tv_parm2);
@@ -68,7 +67,7 @@ public class MemberRechargeDialog extends Dialog {
         tv_parm1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NetUtil.getInstance().QueryMemberByOpenId(new PayResultLitener() {
+                NetUtil.getInstance().QueryMemberByOpenId(new BaseResultLitener() {
                     @Override
                     public void sucess(String serverRetData) {
                         ToastUtils.showShort(serverRetData);
@@ -90,7 +89,7 @@ public class MemberRechargeDialog extends Dialog {
                     ToastUtils.showShort("请输入会员唯一识别码");
                     return;
                 } else {
-                    NetUtil.getInstance().QueryMember(codeStr, new PayResultLitener() {
+                    NetUtil.getInstance().QueryMember(codeStr, new BaseResultLitener() {
                         @Override
                         public void sucess(String serverRetData) {
                             memberid = "";
@@ -110,7 +109,17 @@ public class MemberRechargeDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 if (verifyMoney()) {
+                    NetUtil.getInstance().getOrder(money, memberid, new BaseResultLitener() {
+                        @Override
+                        public void sucess(String serverRetData) {
+                            showSucessDialog(money);
+                        }
 
+                        @Override
+                        public void fail(String errMsg) {
+                            ToastUtils.showShort(errMsg);
+                        }
+                    });
                 }
             }
         });
@@ -123,7 +132,7 @@ public class MemberRechargeDialog extends Dialog {
                     qrCodePayDialog.setOnOkClickListener(new QrCodePayDialog.OnOkClickListener() {
                         @Override
                         public void onResult(String result) {
-                            NetUtil.getInstance().Recharge(memberid, money, result, "", "", new PayResultLitener() {
+                            NetUtil.getInstance().Recharge(memberid, money, result, "", "", new BaseResultLitener() {
                                 @Override
                                 public void sucess(String serverRetData) {
                                     qrCodePayDialog.dismiss();
@@ -146,7 +155,6 @@ public class MemberRechargeDialog extends Dialog {
             }
         });
 
-
     }
 
     private void showSucessDialog(String money) {
@@ -160,15 +168,12 @@ public class MemberRechargeDialog extends Dialog {
         dialog.show();
     }
 
-
     private boolean verifyMoney() {
         if (ObjectUtils.isEmpty(memberid)) {
             ToastUtils.showShort("请选择会员");
             return false;
         }
         paymoney = et_money.getText().toString().trim();
-        BigDecimal minMoney = new BigDecimal(paymoney);
-        money = minMoney.multiply(new BigDecimal("100")).setScale(0, BigDecimal.ROUND_HALF_UP).toString();
         if (ObjectUtils.isEmpty(paymoney) || TextUtils.equals(paymoney, "0") || TextUtils.equals(paymoney, "0.") || TextUtils.equals(paymoney, "0.0") || TextUtils.equals(paymoney, "0.00")) {
             ToastUtils.showShort("请输入有效金额");
             return false;
@@ -176,6 +181,8 @@ public class MemberRechargeDialog extends Dialog {
             ToastUtils.showShort("最大金额99999.99");
             return false;
         } else {
+            BigDecimal minMoney = new BigDecimal(paymoney);
+            money = minMoney.multiply(new BigDecimal("100")).setScale(0, BigDecimal.ROUND_HALF_UP).toString();
             return true;
         }
     }

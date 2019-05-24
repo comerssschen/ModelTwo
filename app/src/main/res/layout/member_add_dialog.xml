@@ -40,7 +40,9 @@
             android:layout_weight="36"
             android:background="@drawable/common_backgroud_black_shape"
             android:hint="请输入姓名"
+            android:maxLength="20"
             android:paddingLeft="5dp"
+            android:singleLine="true"
             android:textSize="10sp" />
 
     </LinearLayout>
@@ -114,7 +116,9 @@
             android:layout_weight="36"
             android:background="@drawable/common_backgroud_black_shape"
             android:hint="请输入手机号"
+            android:maxLength="20"
             android:paddingLeft="5dp"
+            android:singleLine="true"
             android:textSize="10sp" />
 
     </LinearLayout>
@@ -241,12 +245,15 @@
             android:layout_weight="36"
             android:background="@drawable/common_backgroud_black_shape"
             android:hint="请输入详细地址"
+            android:maxLength="30"
             android:paddingLeft="5dp"
+            android:singleLine="true"
             android:textSize="10sp" />
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -280,8 +287,60 @@
             android:layout_weight="36"
             android:background="@drawable/common_backgroud_black_shape"
             android:hint="刷脸输入唯一识别码"
+            android:maxLength="20"
             android:paddingLeft="5dp"
+            android:singleLine="true"
             android:textSize="10sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="40dp"
+        android:paddingRight="30dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:text="密码"
+            android:textColor="@color/title_color"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="22dp"
+            android:layout_weight="36"
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/common_backgroud_black_shape"
+                android:hint="输入新密码"
+                android:maxLength="20"
+                android:paddingLeft="5dp"
+                android:singleLine="true"
+                android:textSize="10sp" />
+
+            <TextView
+                android:layout_width="36dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/common_backgroud_shape"
+                android:gravity="center"
+                android:text="更改"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+        </LinearLayout>
+
 
     </LinearLayout>
 

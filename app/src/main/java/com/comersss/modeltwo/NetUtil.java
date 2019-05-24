@@ -4,9 +4,12 @@ import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.comersss.modeltwo.Listener.PayResultLitener;
+import com.comersss.modeltwo.Listener.MemberResultLitener;
+import com.comersss.modeltwo.Listener.BaseResultLitener;
+import com.comersss.modeltwo.bean.MemberBean;
 import com.comersss.modeltwo.bean.ResultBase;
 import com.comersss.modeltwo.bean.ResultFacePay;
 import com.comersss.modeltwo.bean.ResultGetOrder;
@@ -17,6 +20,7 @@ import com.lzy.okgo.model.Response;
 import com.tencent.wxpayface.IWxPayfaceCallback;
 import com.tencent.wxpayface.WxPayFace;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +43,6 @@ public class NetUtil {
     private String Result = "";
     private String TAG = "test";
     private HashMap<Object, Object> localHashMap;
-
 
     //获取微信openid
     public String getOpenId() {
@@ -66,7 +69,7 @@ public class NetUtil {
     }
 
     //获取订单号
-    public void getOrder(final String money, final PayResultLitener payResultLitener) {
+    public void getOrder(final String money, final String memberId, final BaseResultLitener baseResultLitener) {
         localHashMap = new HashMap<>();
         localHashMap.put("data", "10");
         OkGo.<String>post(Constant.URL + Constant.GenerateOrderNum)
@@ -80,7 +83,7 @@ public class NetUtil {
                             Log.i(TAG, "getOrder :" + body);
                             ResultGetOrder resultGetOrder = new Gson().fromJson(body, ResultGetOrder.class);
                             if (resultGetOrder.isSuccess()) {
-                                wxPay(resultGetOrder.getData(), money, payResultLitener);
+                                ScanPayType(resultGetOrder.getData(), money, memberId, baseResultLitener);
                             } else {
                                 ToastUtils.showShort(resultGetOrder.getMessage());
                             }
@@ -101,8 +104,8 @@ public class NetUtil {
                 });
     }
 
-    //微信扫脸支付
-    private void wxPay(final String outTratNum, final String money, final PayResultLitener payResultLitener) {
+    //微信扫脸支付/充值
+    private void ScanPayType(final String outTratNum, final String money, final String memberId, final BaseResultLitener baseResultLitener) {
         localHashMap = new HashMap();
         localHashMap.put("face_authtype", "FACEPAY");
         localHashMap.put("appid", Constant.appid);
@@ -125,50 +128,57 @@ public class NetUtil {
                 Log.i("test", "response | getWxpayfaceCode " + paramMap);
                 final String code = paramMap.get("return_code").toString();
                 if (TextUtils.equals(code, "SUCCESS")) {
-                    Map<String, String> map = new HashMap<>();
-                    map.put("data1", "10");
-                    map.put("data2", money);
-                    map.put("data3", outTratNum);
-                    map.put("data4", paramMap.get("openid").toString().trim());
-                    map.put("data5", paramMap.get("face_code").toString().trim());
-                    OkGo.<String>post(Constant.URL + Constant.WechatFacePay)
-                            .upJson(new Gson().toJson(map))
-                            .headers("Authorization", SPUtils.getInstance().getString("token", ""))
-                            .execute(new StringCallback() {
-                                @Override
-                                public void onSuccess(Response<String> response) {
-                                    Log.i("test", "response.body() = " + response.body());
-                                    try {
-                                        ResultFacePay resultFacePay = new Gson().fromJson(response.body(), ResultFacePay.class);
-                                        if (resultFacePay.isSuccess()) {
-                                            WxPayFace.getInstance().updateWxpayfacePayResult(localHashMap, new IWxPayfaceCallback() {
-                                                public void response(Map paramMap) throws RemoteException {
-                                                    Log.i(TAG, "paramMap" + paramMap);
-                                                    payResultLitener.sucess("");
-                                                }
-                                            });
-                                        } else {
-                                            payResultLitener.fail(resultFacePay.getMessage());
+                    String openid = paramMap.get("openid").toString().trim();
+                    String face_code = paramMap.get("face_code").toString().trim();
+                    if (ObjectUtils.isEmpty(memberId)) {
+                        localHashMap = new HashMap<>();
+                        localHashMap.put("data1", "10");
+                        localHashMap.put("data2", money);
+                        localHashMap.put("data3", outTratNum);
+                        localHashMap.put("data4", openid);
+                        localHashMap.put("data5", face_code);
+                        OkGo.<String>post(Constant.URL + Constant.WechatFacePay)
+                                .upJson(new Gson().toJson(localHashMap))
+                                .headers("Authorization", SPUtils.getInstance().getString("token", ""))
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onSuccess(Response<String> response) {
+                                        Log.i("test", "response.body() = " + response.body());
+                                        try {
+                                            ResultFacePay resultFacePay = new Gson().fromJson(response.body(), ResultFacePay.class);
+                                            if (resultFacePay.isSuccess()) {
+                                                WxPayFace.getInstance().updateWxpayfacePayResult(localHashMap, new IWxPayfaceCallback() {
+                                                    public void response(Map paramMap) throws RemoteException {
+                                                        Log.i(TAG, "paramMap" + paramMap);
+                                                        baseResultLitener.sucess("");
+                                                    }
+                                                });
+                                            } else {
+                                                baseResultLitener.fail(resultFacePay.getMessage());
+                                            }
+
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            baseResultLitener.fail("网络异常");
                                         }
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        payResultLitener.fail("网络异常");
                                     }
-                                }
 
-                                @Override
-                                public void onError(Response<String> response) {
-                                    super.onError(response);
-                                    payResultLitener.fail("网络异常：" + response.body());
-                                }
-                            });
+                                    @Override
+                                    public void onError(Response<String> response) {
+                                        super.onError(response);
+                                        baseResultLitener.fail("网络异常：" + response.body());
+                                    }
+                                });
+                    } else {
+                        //充值
+                        Recharge(memberId, money, "", face_code, openid, baseResultLitener);
+                    }
 
 
                 } else if (TextUtils.equals(code, "USER_CANCEL")) {
-                    payResultLitener.fail("用户取消");
+                    baseResultLitener.fail("用户取消");
                 } else if (TextUtils.equals(code, "SCAN_PAYMENT")) {
-                    payResultLitener.fail("扫码支付");
+                    baseResultLitener.fail("扫码支付");
                 }
             }
         });
@@ -176,7 +186,7 @@ public class NetUtil {
     }
 
     //条码支付
-    public void getQrCodePay(String qrcode, String money, final PayResultLitener payResultLitener) {
+    public void getQrCodePay(String qrcode, String money, final BaseResultLitener baseResultLitener) {
         localHashMap = new HashMap<>();
         localHashMap.put("data1", money);
         localHashMap.put("data2", qrcode);
@@ -189,7 +199,7 @@ public class NetUtil {
                         try {
                             String body = response.body();
                             Log.i("test", "getQrCodePay :" + body);
-                            payResultLitener.sucess(body);
+                            baseResultLitener.sucess(body);
 //                            ResultGetOrder resultGetOrder = new Gson().fromJson(body, ResultGetOrder.class);
 //                            if (resultGetOrder.isSuccess()) {
 //
@@ -201,20 +211,59 @@ public class NetUtil {
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            payResultLitener.fail("预下单失败，请重试");
+                            baseResultLitener.fail("预下单失败，请重试");
                         }
                     }
 
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        payResultLitener.fail("预下单失败，请重试");
+                        baseResultLitener.fail("预下单失败，请重试");
+                    }
+                });
+    }
+
+    //获取会员列表
+    public void getMemberList(int pigeindex, final MemberResultLitener memberResultLitener) {
+        localHashMap = new HashMap<>();
+        localHashMap.put("pageIndex", pigeindex);
+        localHashMap.put("pageSize", 10);
+        OkGo.<String>post(Constant.URL + Constant.QueryMembers)
+                .upJson(new Gson().toJson(localHashMap))
+                .headers("Authorization", SPUtils.getInstance().getString("token", ""))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            ResultBase resultGetOrder = new Gson().fromJson(body, ResultBase.class);
+                            if (resultGetOrder.isSuccess()) {
+                                ToastUtils.showShort(resultGetOrder.getMessage());
+                                ArrayList<MemberBean> beanList = new ArrayList<>();
+                                beanList.add(new MemberBean("111", "name111", 0, "17682310815", "1966-02-15", "130525", "adressdetailldglfkgl;d;fg", 2, 2, 0));
+                                beanList.add(new MemberBean("112", "name112", 1, "17682310815", "1992-05-02", "130903", "adressdetailldglfkgl;d;fg", 2, 2, 0));
+                                memberResultLitener.sucess(beanList);
+                            } else {
+                                memberResultLitener.fail(resultGetOrder.getMessage());
+                            }
+                            Log.i("test", "getMemberList :" + body);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            memberResultLitener.fail("查询失败，请重试");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        memberResultLitener.fail("查询失败，请重试");
                     }
                 });
     }
 
     //单条会员信息的查询
-    public void QueryMember(String codeStr, final PayResultLitener payResultLitener) {
+    public void QueryMember(String codeStr, final BaseResultLitener baseResultLitener) {
         localHashMap = new HashMap<>();
         localHashMap.put("data", codeStr);
         OkGo.<String>post(Constant.URL + Constant.QueryMember)
@@ -226,11 +275,11 @@ public class NetUtil {
                         try {
                             String body = response.body();
                             ResultBase resultGetOrder = new Gson().fromJson(body, ResultBase.class);
-                            payResultLitener.sucess(resultGetOrder.getMessage());
+                            baseResultLitener.sucess(resultGetOrder.getMessage());
                             Log.i("test", "QueryMember :" + body);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            payResultLitener.fail(e.toString());
+                            baseResultLitener.fail(e.toString());
                             ToastUtils.showShort("查询失败，请重试");
                         }
                     }
@@ -238,13 +287,13 @@ public class NetUtil {
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        payResultLitener.fail(response.body());
+                        baseResultLitener.fail(response.body());
                     }
                 });
     }
 
-    //单条会员信息的查询
-    public void QueryMemberByOpenId(final PayResultLitener payResultLitener) {
+    //单条会员信息的查询通过微信openid
+    public void QueryMemberByOpenId(final BaseResultLitener baseResultLitener) {
         localHashMap = new HashMap();
         localHashMap.put("face_authtype", "FACEID-ONCE");
         localHashMap.put("appid", Constant.appid);
@@ -261,7 +310,7 @@ public class NetUtil {
             public void response(Map map) throws RemoteException {
                 Log.i("test", "map = " + map.toString());
                 Result = map.get("openid").toString();
-                QueryMember(Result, payResultLitener);
+                QueryMember(Result, baseResultLitener);
             }
         });
 
@@ -269,13 +318,13 @@ public class NetUtil {
     }
 
     //会员充值
-    public void Recharge(String memberid, String money, String auth_code, String face_token, String WechatUnqueId, final PayResultLitener payResultLitener) {
+    public void Recharge(String memberid, String money, String qrcode, String face_token, String openId, final BaseResultLitener baseResultLitener) {
         localHashMap = new HashMap<>();
         localHashMap.put("Id", memberid);
         localHashMap.put("RechargePrice", money);
-        localHashMap.put("auth_code", auth_code);
+        localHashMap.put("auth_code", qrcode);
         localHashMap.put("face_token", face_token);
-        localHashMap.put("WechatUnqueId", WechatUnqueId);
+        localHashMap.put("WechatUnqueId", openId);
         OkGo.<String>post(Constant.URL + Constant.Recharge)
                 .upJson(new Gson().toJson(localHashMap))
                 .headers("Authorization", SPUtils.getInstance().getString("token", ""))
@@ -286,18 +335,18 @@ public class NetUtil {
                             String body = response.body();
                             Log.i("test", "Recharge :" + body);
                             ResultBase resultGetOrder = new Gson().fromJson(body, ResultBase.class);
-                            payResultLitener.sucess(resultGetOrder.getMessage());
+                            baseResultLitener.sucess(resultGetOrder.getMessage());
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            payResultLitener.fail(e.toString());
+                            baseResultLitener.fail(e.toString());
                         }
                     }
 
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        payResultLitener.fail(response.body());
+                        baseResultLitener.fail(response.body());
                     }
                 });
 
@@ -339,5 +388,35 @@ public class NetUtil {
 
     }
 
+    //获取会员统计
+    public void queryMemberStatistics(final BaseResultLitener baseResultLitener) {
+        OkGo.<String>post(Constant.URL + Constant.QueryMemberStatistics)
+                .headers("Authorization", SPUtils.getInstance().getString("token", ""))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            ResultBase resultGetOrder = new Gson().fromJson(body, ResultBase.class);
+                            if (resultGetOrder.isSuccess()) {
+                                baseResultLitener.sucess(resultGetOrder.getMessage());
+                            } else {
+                                baseResultLitener.fail(resultGetOrder.getMessage());
+                            }
+                            Log.i("test", "queryMemberStatistics :" + body);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            baseResultLitener.fail("查询失败，请重试");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        baseResultLitener.fail("查询失败，请重试");
+                    }
+                });
+    }
 
 }
