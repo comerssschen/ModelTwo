@@ -10,12 +10,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.comersss.modeltwo.Listener.MemberLevelLitener;
+import com.comersss.modeltwo.Listener.TopCountLitener;
 import com.comersss.modeltwo.bean.ArgGetAuthInfo;
+import com.comersss.modeltwo.bean.ArgTopCountResult;
+import com.comersss.modeltwo.bean.CashResult;
 import com.comersss.modeltwo.bean.MemberLevelResult;
+import com.comersss.modeltwo.bean.ResultBase;
+import com.comersss.modeltwo.bean.StoreResult;
 import com.comersss.modeltwo.fragments.DataFragment;
 import com.comersss.modeltwo.fragments.HomeFragment;
 import com.comersss.modeltwo.fragments.SettingFragment;
@@ -48,6 +54,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     private DataFragment dataFragment;
     private BackPressDialog backPressDialog;
     private HashMap<Object, Object> localHashMap;
+    private TextView tv_cash;
+    private TextView tv_store;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +63,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         setContentView(R.layout.activity_main);
 
         appContext = (AppContext) getApplication();
+        tv_store = findViewById(R.id.tv_store);
+        tv_cash = findViewById(R.id.tv_cash);
         radiogroup = findViewById(R.id.radiogroup);
         fragments = new ArrayList<>();
         homeFragment = new HomeFragment();
@@ -110,6 +120,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
             }
         });
+        QueryCasherInfo();
+        QueryStoreInfo();
     }
 
     //当页面重新进入主界面读取用户信息
@@ -117,6 +129,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     protected void onResume() {
         super.onResume();
     }
+
     //返回按钮监听,回到桌面
     @Override
     public void onBackPressed() {
@@ -154,7 +167,6 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
         preFragment = fm;
     }
-
 
     public void getAuthInfo() {
         WxPayFace.getInstance().getWxpayfaceRawdata(new IWxPayfaceCallback() {
@@ -213,6 +225,56 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
             }
         });
 
+    }
+
+    public void QueryCasherInfo() {
+        OkGo.<String>post(Constant.URL + Constant.QueryCasherInfo)
+                .headers("Authorization", SPUtils.getInstance().getString("token", ""))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            CashResult cashResult = new Gson().fromJson(body, CashResult.class);
+                            if (cashResult.isSuccess()) {
+                                tv_cash.setText(cashResult.getData().getUserName());
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                    }
+                });
+    }
+
+    public void QueryStoreInfo() {
+        OkGo.<String>post(Constant.URL + Constant.QueryStoreInfo)
+                .headers("Authorization", SPUtils.getInstance().getString("token", ""))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            String body = response.body();
+                            StoreResult storeResult = new Gson().fromJson(body, StoreResult.class);
+                            if (storeResult.isSuccess()) {
+                                tv_store.setText(storeResult.getData().getStoreName());
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                    }
+                });
     }
 
 
