@@ -21,6 +21,7 @@ import com.comersss.modeltwo.Listener.BaseResultLitener;
 import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
 import com.comersss.modeltwo.bean.MemberResult;
+import com.comersss.modeltwo.dialog.home.BackPressDialog;
 import com.comersss.modeltwo.dialog.home.ChoseMemberDialog;
 import com.comersss.modeltwo.dialog.home.PayMoneyDialog;
 import com.comersss.modeltwo.dialog.home.QrCodePayDialog;
@@ -66,6 +67,9 @@ public class HomeFragment extends BaseFragment {
     private View cashFragmentView;
     private PayMoneyDialog payMoneyDialog;
     private QrCodePayDialog qrCodePayDialog;
+    private int type = 0;
+    private MemberResult.DataBean memberBean;
+    private BackPressDialog backPressDialog;
 
 
     @Override
@@ -128,6 +132,7 @@ public class HomeFragment extends BaseFragment {
                 choseMemberDialog.setOnOkClickListener(new ChoseMemberDialog.OnOkClickListener() {
                     @Override
                     public void onOkClick(MemberResult.DataBean dataBean) {
+                        memberBean = dataBean;
                         memberid = dataBean.getId();
                         tvContent.setText("姓名： " + dataBean.getName() + "  余额：" + dataBean.getBalance() + "元");
                     }
@@ -140,89 +145,50 @@ public class HomeFragment extends BaseFragment {
                 break;
             case R.id.ll_scan:
                 if (verifyMoney()) {
-//                    if (ObjectUtils.isEmpty(payMoneyDialog)) {
-                    payMoneyDialog = new PayMoneyDialog(getContext(), "刷脸", paymoney + "元", "请刷脸收款");
-                    payMoneyDialog.setOnOkClickListener(new PayMoneyDialog.OnOkClickListener() {
-                        @Override
-                        public void onOkClick() {
-                            NetUtil.getInstance().getOrder(0, money, memberid, new BaseResultLitener() {
-                                @Override
-                                public void sucess(String serverRetData) {
-                                    Message message = Message.obtain(mHandler);
-                                    message.what = 0;
-                                    mHandler.sendMessage(message);
-                                }
+                    if (memberid != 0 && type == 2 && !ObjectUtils.isEmpty(memberBean) && memberBean.getBalance() > Double.parseDouble(paymoney)) {
+                        backPressDialog = new BackPressDialog(getActivity(), "会员付款", "会员余额充足，确认要会员付款吗？");
+                        backPressDialog.setOnCancleClickListener(new BackPressDialog.OnCancleClickListener() {
+                            @Override
+                            public void onOkClick() {
+                                scanpay();
+                            }
+                        });
+                        backPressDialog.setOnOkClickListener(new BackPressDialog.OnOkClickListener() {
+                            @Override
+                            public void onOkClick() {
+                                backPressDialog.dismiss();
+                                consume();
+                            }
+                        });
+                        backPressDialog.show();
+                    } else {
+                        scanpay();
+                    }
 
-                                @Override
-                                public void fail(String errMsg) {
-                                    ToastUtils.showShort(errMsg);
-                                }
-                            });
-                        }
-                    });
-//                    }
-//                    if (!payMoneyDialog.isShowing()) {
-                    payMoneyDialog.setContent(paymoney + "元");
-                    payMoneyDialog.show();
-//                    }
                 }
                 break;
             case R.id.ll_qrcode:
                 if (verifyMoney()) {
-                    qrCodePayDialog = new QrCodePayDialog(getContext(), "扫码", paymoney + "元", "请扫码收款");
-                    qrCodePayDialog.setOnOkClickListener(new QrCodePayDialog.OnOkClickListener() {
-                        @Override
-                        public void onResult(String result) {
-                            if (memberid == 0) {
-                                NetUtil.getInstance().getQrCodePay(result, money, memberid, new BaseResultLitener() {
-                                    @Override
-                                    public void sucess(String serverRetData) {
-                                        qrCodePayDialog.dismiss();
-                                        if (ObjectUtils.isEmpty(sucessDialog)) {
-                                            sucessDialog = new SucessDialog(mContext, "收款金额：" + paymoney + "元", "收款成功");
-                                        }
-                                        if (!sucessDialog.isShowing()) {
-                                            sucessDialog.show();
-                                        }
-                                        paymoneyEdit.setText("");
-                                        memberid = 0;
-                                        tvContent.setText("");
-                                    }
-
-                                    @Override
-                                    public void fail(String errMsg) {
-                                        ToastUtils.showShort(errMsg);
-                                    }
-                                });
-                            } else {
-                                NetUtil.getInstance().Consume(memberid, money, result, "", "", "", new BaseResultLitener() {
-                                    @Override
-                                    public void sucess(String serverRetData) {
-                                        qrCodePayDialog.dismiss();
-                                        if (ObjectUtils.isEmpty(sucessDialog)) {
-                                            sucessDialog = new SucessDialog(mContext, "收款金额：" + paymoney + "元", "收款成功");
-                                        }
-                                        if (!sucessDialog.isShowing()) {
-                                            sucessDialog.show();
-                                        }
-                                        paymoneyEdit.setText("");
-                                        memberid = 0;
-                                        tvContent.setText("");
-                                    }
-
-                                    @Override
-                                    public void fail(String errMsg) {
-                                        ToastUtils.showShort(errMsg);
-                                    }
-                                });
+                    if (memberid != 0 && type == 2 && !ObjectUtils.isEmpty(memberBean) && memberBean.getBalance() > Double.parseDouble(paymoney)) {
+                        backPressDialog = new BackPressDialog(getActivity(), "会员付款", "会员余额充足，确认要会员付款吗？");
+                        backPressDialog.setOnCancleClickListener(new BackPressDialog.OnCancleClickListener() {
+                            @Override
+                            public void onOkClick() {
+                                qrcode();
                             }
-
-                        }
-                    });
-                    if (!qrCodePayDialog.isShowing()) {
-                        qrCodePayDialog.setContent(paymoney + "元");
-                        qrCodePayDialog.show();
+                        });
+                        backPressDialog.setOnOkClickListener(new BackPressDialog.OnOkClickListener() {
+                            @Override
+                            public void onOkClick() {
+                                backPressDialog.dismiss();
+                                consume();
+                            }
+                        });
+                        backPressDialog.show();
+                    } else {
+                        qrcode();
                     }
+
                 }
                 break;
 
@@ -267,6 +233,94 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
+    private void scanpay() {
+
+        payMoneyDialog = new PayMoneyDialog(getContext(), "刷脸", paymoney + "元", "请刷脸收款");
+        payMoneyDialog.setOnOkClickListener(new PayMoneyDialog.OnOkClickListener() {
+            @Override
+            public void onOkClick() {
+                NetUtil.getInstance().getOrder(type, money, memberid, new BaseResultLitener() {
+                    @Override
+                    public void sucess(String serverRetData) {
+                        Message message = Message.obtain(mHandler);
+                        message.what = 0;
+                        mHandler.sendMessage(message);
+                    }
+
+                    @Override
+                    public void fail(String errMsg) {
+                        ToastUtils.showShort(errMsg);
+                    }
+                });
+            }
+        });
+//
+        payMoneyDialog.setContent(paymoney + "元");
+        payMoneyDialog.show();
+    }
+
+
+    //会员支付
+    private void consume() {
+        NetUtil.getInstance().Consume(memberid, money, "", "", "", "", new BaseResultLitener() {
+            @Override
+            public void sucess(String serverRetData) {
+                qrCodePayDialog.dismiss();
+                if (ObjectUtils.isEmpty(sucessDialog)) {
+                    sucessDialog = new SucessDialog(mContext, "收款金额：" + paymoney + "元", "收款成功");
+                }
+                if (!sucessDialog.isShowing()) {
+                    sucessDialog.show();
+                }
+                paymoneyEdit.setText("");
+                memberid = 0;
+                tvContent.setText("");
+            }
+
+            @Override
+            public void fail(String errMsg) {
+                ToastUtils.showShort(errMsg);
+            }
+        });
+
+    }
+
+    //扫码直接支付
+    private void qrcode() {
+        qrCodePayDialog = new QrCodePayDialog(getContext(), "扫码", paymoney + "元", "请扫码收款");
+        qrCodePayDialog.setOnOkClickListener(new QrCodePayDialog.OnOkClickListener() {
+            @Override
+            public void onResult(String result) {
+
+                NetUtil.getInstance().getQrCodePay(result, money, memberid, new BaseResultLitener() {
+                    @Override
+                    public void sucess(String serverRetData) {
+                        qrCodePayDialog.dismiss();
+                        if (ObjectUtils.isEmpty(sucessDialog)) {
+                            sucessDialog = new SucessDialog(mContext, "收款金额：" + paymoney + "元", "收款成功");
+                        }
+                        if (!sucessDialog.isShowing()) {
+                            sucessDialog.show();
+                        }
+                        paymoneyEdit.setText("");
+                        memberid = 0;
+                        tvContent.setText("");
+                    }
+
+                    @Override
+                    public void fail(String errMsg) {
+                        ToastUtils.showShort(errMsg);
+                    }
+                });
+            }
+
+        });
+        if (!qrCodePayDialog.isShowing()) {
+            qrCodePayDialog.setContent(paymoney + "元");
+            qrCodePayDialog.show();
+        }
+    }
+
     private boolean verifyMoney() {
         paymoney = paymoneyEdit.getText().toString().trim();
         if (ObjectUtils.isEmpty(paymoney) || TextUtils.equals(paymoney, "0") || TextUtils.equals(paymoney, "0.") || TextUtils.equals(paymoney, "0.0") || TextUtils.equals(paymoney, "0.00")) {
@@ -278,6 +332,11 @@ public class HomeFragment extends BaseFragment {
         } else {
             BigDecimal minMoney = new BigDecimal(paymoney);
             money = minMoney.multiply(new BigDecimal("100")).setScale(0, BigDecimal.ROUND_HALF_UP).toString();
+            if (memberid != 0 && !ObjectUtils.isEmpty(memberBean)) {
+                if (memberBean.getBalance() > Double.parseDouble(paymoney)) {//会员
+                    type = 2;
+                }
+            }
             return true;
         }
     }

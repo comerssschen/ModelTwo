@@ -1,15 +1,12 @@
 package com.comersss.modeltwo.dialog.member;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -28,6 +25,7 @@ import com.comersss.modeltwo.Listener.GetOpenIdLitener;
 import com.comersss.modeltwo.Listener.MemberLevelLitener;
 import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
+import com.comersss.modeltwo.adapter.LevelAdapter;
 import com.comersss.modeltwo.adapter.SpinnerAdapter;
 import com.comersss.modeltwo.adapter.SpinnerThreeAdapter;
 import com.comersss.modeltwo.adapter.SpinnerTwoAdapter;
@@ -86,7 +84,10 @@ public class MemberAddDialog extends Dialog {
     private ArrayList<String> monthData;
     private int currentDay;
     private LinearLayout ll_code;
-    private LinearLayout ll_pwd;
+    private LevelAdapter levelAdapter;
+    private int memberLevelId = 0;
+    private String url;
+    private String titelStr;
 
     public interface OnOkClickListener {
         void onOkClick();
@@ -98,10 +99,11 @@ public class MemberAddDialog extends Dialog {
         this.onOkClickListener = onOkClickListener;
     }
 
-    public MemberAddDialog(Context context, MemberListResult.DataBeanX.DataBean memberBean) {
+    public MemberAddDialog(Context context, MemberListResult.DataBeanX.DataBean memberBean, String titelStr) {
         super(context);
         this.mContext = context;
         this.memberBean = memberBean;
+        this.titelStr = titelStr;
     }
 
     @Override
@@ -152,6 +154,8 @@ public class MemberAddDialog extends Dialog {
                 });
             }
         });
+        TextView tv_title = findViewById(R.id.tv_title);
+        tv_title.setText(titelStr);
         TextView tv_button = findViewById(R.id.tv_button);
         tv_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,7 +164,6 @@ public class MemberAddDialog extends Dialog {
             }
         });
         ll_code = findViewById(R.id.ll_code);
-        ll_pwd = findViewById(R.id.ll_pwd);
         rb_man = findViewById(R.id.rb_man);
         rb_women = findViewById(R.id.rb_women);
         et_name = findViewById(R.id.et_name);
@@ -186,20 +189,10 @@ public class MemberAddDialog extends Dialog {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     try {
                         twodata = getData(onedata.get(position).getId());
-//                        twoAdapter.setData(twodata);
+                        twoAdapter.setData(twodata);
                         threedata = getData(twodata.get(0).getId());
-//                        threeAdapter.setData(threedata);
+                        threeAdapter.setData(threedata);
                         townId = threedata.get(0).getId();
-
-//                        twodata.clear();
-//                        twodata.addAll(getData(onedata.get(position).getId()));
-//                        twoAdapter.notifyDataSetChanged();
-//
-//                        threedata.clear();
-//                        threedata.addAll(getData(twodata.get(0).getId()));
-//                        threeAdapter.notifyDataSetChanged();
-
-
                     } catch (Exception ex) {
                         ex.printStackTrace();
                         Log.i("test", ex + "");
@@ -299,22 +292,24 @@ public class MemberAddDialog extends Dialog {
                 }
             });
 
-            NetUtil.getInstance().QueryMemberLevels(new MemberLevelLitener() {
+            Spinner sp_level = findViewById(R.id.sp_level);
+            levelAdapter = new LevelAdapter(mContext, Constant.mberLevelList);
+            sp_level.setAdapter(levelAdapter);
+            sp_level.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
-                public void sucess(List<MemberLevelResult.DataBean> mberBeanList) {
-
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    memberLevelId = Constant.mberLevelList.get(position).getId();
                 }
 
                 @Override
-                public void fail(String errMsg) {
+                public void onNothingSelected(AdapterView<?> parent) {
 
                 }
             });
 
             if (!ObjectUtils.isEmpty(memberBean)) {
                 ll_code.setVisibility(View.GONE);
-                ll_pwd.setVisibility(View.VISIBLE);
-                et_name.setText(memberBean.getId());
+                et_name.setText(memberBean.getName());
                 et_phone.setText(memberBean.getPhoneNum());
                 et_adress_detail.setText(memberBean.getAddress());
 
@@ -324,6 +319,12 @@ public class MemberAddDialog extends Dialog {
                 } else {
                     rb_women.setChecked(false);
                     rb_man.setChecked(true);
+                }
+
+                for (int i = 0; i < Constant.mberLevelList.size(); i++) {
+                    if (ObjectUtils.equals(Constant.mberLevelList.get(i).getId(), memberBean.getMemberLevelId())) {
+                        sp_level.setSelection(i);
+                    }
                 }
 
                 String[] value = memberBean.getBirthday().split("-");
@@ -380,8 +381,8 @@ public class MemberAddDialog extends Dialog {
             ToastUtils.showShort("请输入正确的手机号");
             return;
         }
-        if (ObjectUtils.isEmpty(nameStr) || ObjectUtils.isEmpty(adressStr) || ObjectUtils.isEmpty(memberCode)) {
-            ToastUtils.showShort("请输入必填项");
+        if (ObjectUtils.isEmpty(nameStr)) {
+            ToastUtils.showShort("请输入会员名称");
         }
 
         if (ObjectUtils.isEmpty(townId)) {
@@ -394,11 +395,17 @@ public class MemberAddDialog extends Dialog {
         localHashMap.put("Birthday", currentYear + "-" + currentMonth + "-" + currentDay);
         localHashMap.put("AddressCode", townId);
         localHashMap.put("Address", adressStr);
-        localHashMap.put("WechatUnqueId", memberCode);
-        localHashMap.put("MemberLevelId", 9);
-//        localHashMap.put("IsLocked", codeStr);
+        localHashMap.put("MemberLevelId", memberLevelId);
 
-        OkGo.<String>post(Constant.URL + Constant.AddMember)
+        if (ObjectUtils.isEmpty(memberBean)) {
+            localHashMap.put("WechatUnqueId", memberCode);
+            url = Constant.URL + Constant.AddMember;
+        } else {
+            localHashMap.put("Id", memberBean.getId());
+            url = Constant.URL + Constant.UpdateMember;
+        }
+
+        OkGo.<String>post(url)
                 .upJson(new Gson().toJson(localHashMap))
                 .headers("Authorization", SPUtils.getInstance().getString("token", ""))
                 .execute(new StringCallback() {
@@ -418,14 +425,14 @@ public class MemberAddDialog extends Dialog {
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            ToastUtils.showShort("添加失败，请重试");
+                            ToastUtils.showShort("操作失败，请重试");
                         }
                     }
 
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
-                        ToastUtils.showShort("添加失败，请重试");
+                        ToastUtils.showShort("操作失败，请重试");
                     }
                 });
 

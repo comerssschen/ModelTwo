@@ -223,7 +223,7 @@ public class MemberFragment extends BaseFragment {
                 break;
             //新增会员
             case R.id.tv_member_add:
-                MemberAddDialog memberAddDialog = new MemberAddDialog(getContext(), null);
+                MemberAddDialog memberAddDialog = new MemberAddDialog(getContext(), null, "新增会员");
                 memberAddDialog.setOnOkClickListener(new MemberAddDialog.OnOkClickListener() {
                     @Override
                     public void onOkClick() {

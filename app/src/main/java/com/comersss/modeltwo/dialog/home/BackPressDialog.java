@@ -18,6 +18,8 @@ import com.comersss.modeltwo.R;
 public class BackPressDialog extends Dialog {
 
     private Context mContext;
+    private String titleStr;
+    private String contentStr;
 
     public interface OnOkClickListener {
         void onOkClick();
@@ -27,6 +29,23 @@ public class BackPressDialog extends Dialog {
 
     public void setOnOkClickListener(OnOkClickListener onOkClickListener) {
         this.onOkClickListener = onOkClickListener;
+    }
+
+    public interface OnCancleClickListener {
+        void onOkClick();
+    }
+
+    private OnCancleClickListener onCancleClickListener;
+
+    public void setOnCancleClickListener(OnCancleClickListener onOkClickListener) {
+        this.onCancleClickListener = onOkClickListener;
+    }
+
+    public BackPressDialog(Context context, String titleStr, String contentStr) {
+        super(context);
+        this.mContext = context;
+        this.titleStr = titleStr;
+        this.contentStr = contentStr;
     }
 
     public BackPressDialog(Context context) {
@@ -42,6 +61,11 @@ public class BackPressDialog extends Dialog {
         setContentView(R.layout.backpress_dialog);
         Window dialogWindow = getWindow();
         dialogWindow.setGravity(Gravity.CENTER);
+
+        TextView tv_content = findViewById(R.id.tv_content);
+        TextView tv_title = findViewById(R.id.tv_title);
+        tv_content.setText(contentStr);
+        tv_title.setText(titleStr);
         TextView tvConfirm = findViewById(R.id.tv_confirm);
         TextView tvCancle = findViewById(R.id.tv_cancle);
 
@@ -55,7 +79,8 @@ public class BackPressDialog extends Dialog {
         tvCancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                if (onCancleClickListener != null)
+                    onCancleClickListener.onOkClick();
             }
         });
         setCancelable(true);

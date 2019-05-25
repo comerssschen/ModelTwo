@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         android:layout_weight="10"
         android:gravity="center"
+        android:singleLine="true"
         android:text="会员号"
         android:textColor="@color/title_color"
         android:textSize="10sp" />
@@ -21,6 +22,7 @@
         android:layout_height="match_parent"
         android:layout_weight="10"
         android:gravity="center"
+        android:singleLine="true"
         android:text="会员名"
         android:textColor="@color/title_color"
         android:textSize="10sp" />
@@ -31,6 +33,7 @@
         android:layout_height="match_parent"
         android:layout_weight="10"
         android:gravity="center"
+        android:singleLine="true"
         android:text="会员等级"
         android:textColor="@color/title_color"
         android:textSize="10sp" />
@@ -41,6 +44,7 @@
         android:layout_height="match_parent"
         android:layout_weight="20"
         android:gravity="center"
+        android:singleLine="true"
         android:text="手机号"
         android:textColor="@color/title_color"
         android:textSize="10sp" />
@@ -52,6 +56,7 @@
         android:layout_height="match_parent"
         android:layout_weight="10"
         android:gravity="center"
+        android:singleLine="true"
         android:text="金额"
         android:textColor="@color/title_color"
         android:textSize="10sp" />
@@ -62,6 +67,7 @@
         android:layout_height="match_parent"
         android:layout_weight="8"
         android:gravity="center"
+        android:singleLine="true"
         android:text="性别"
         android:textColor="@color/title_color"
         android:textSize="10sp" />
@@ -72,6 +78,7 @@
         android:layout_height="match_parent"
         android:layout_weight="10"
         android:gravity="center"
+        android:singleLine="true"
         android:text="会员状态"
         android:textColor="@color/title_color"
         android:textSize="10sp" />

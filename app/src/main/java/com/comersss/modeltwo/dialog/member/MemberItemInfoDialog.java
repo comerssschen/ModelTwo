@@ -72,7 +72,7 @@ public class MemberItemInfoDialog extends Dialog {
         tv_update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MemberAddDialog memberAddDialog = new MemberAddDialog(mContext, memberBean);
+                MemberAddDialog memberAddDialog = new MemberAddDialog(mContext, memberBean, "编辑会员");
                 memberAddDialog.show();
                 dismiss();
             }

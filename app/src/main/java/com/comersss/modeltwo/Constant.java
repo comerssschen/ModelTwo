@@ -1,5 +1,10 @@
 package com.comersss.modeltwo;
 
+import com.comersss.modeltwo.bean.MemberLevelResult;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 全局变量
  * Created by comersss on 16/12/23.
@@ -13,8 +18,9 @@ public class Constant {
     public static String mch_id = "1440771702";
     public static String sub_mch_id = "1531015161";
     public static AuthInfo authInfo = new AuthInfo();
+    public static List<MemberLevelResult.DataBean> mberLevelList = new ArrayList<>();
 
-    //人脸支付
+    //会员消费
     public static final String Consume = "/api/MemberApi/Consume";
 
     //获取会员等级列表

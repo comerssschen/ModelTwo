@@ -136,20 +136,16 @@ public class NetUtil {
                     String openid = paramMap.get("openid").toString().trim();
                     String face_code = paramMap.get("face_code").toString().trim();
                     if (type == 0) {
-                        if (memberId == 0) {
-                            //直接消费
-                            pay(money, outTratNum, openid, face_code, baseResultLitener);
-                        } else {
-                            //会员消费
-                            BigDecimal minMoney = new BigDecimal(money);
-                            Consume(memberId, minMoney.divide(new BigDecimal("100")).toString(),"", outTratNum, openid, face_code, baseResultLitener);
-                        }
+                        //直接消费
+                        pay(money, outTratNum, openid, face_code, baseResultLitener);
+                    } else if (type == 2) {
+                        BigDecimal minMoney = new BigDecimal(money);
+                        Consume(memberId, minMoney.divide(new BigDecimal("100")).toString(), "", outTratNum, openid, face_code, baseResultLitener);
                     } else {
                         //充值
                         BigDecimal minMoney = new BigDecimal(money);
                         Recharge(memberId, minMoney.divide(new BigDecimal("100")).toString(), "", face_code, openid, outTratNum, baseResultLitener);
                     }
-
 
                 } else if (TextUtils.equals(code, "USER_CANCEL")) {
                     baseResultLitener.fail("用户取消");
@@ -202,7 +198,8 @@ public class NetUtil {
                 });
     }
 
-    public void Consume(int memberid, String money,String auth_code, String outTratNum, String openid, String face_code, final BaseResultLitener baseResultLitener) {
+    //会员消费
+    public void Consume(int memberid, String money, String auth_code, String outTratNum, String openid, String face_code, final BaseResultLitener baseResultLitener) {
         localHashMap = new HashMap<>();
         localHashMap.put("Id", memberid);
         localHashMap.put("RealConsumePrice", money);
