@@ -1,5 +1,6 @@
 package com.comersss.modeltwo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.RemoteException;
@@ -73,8 +74,16 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         ivLoginOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SPUtils.getInstance().clear();
-                finish();
+                backPressDialog = new BackPressDialog(MainActivity.this, "退出", "确认退出吗？");
+                backPressDialog.setOnOkClickListener(new BackPressDialog.OnOkClickListener() {
+                    @Override
+                    public void onOkClick() {
+                        backPressDialog.dismiss();
+                        SPUtils.getInstance().clear();
+                        finish();
+                    }
+                });
+                backPressDialog.show();
             }
         });
 
@@ -103,23 +112,18 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        backPressDialog = new BackPressDialog(MainActivity.this);
-        backPressDialog.setOnOkClickListener(new BackPressDialog.OnOkClickListener() {
-            @Override
-            public void onOkClick() {
-                backPressDialog.dismiss();
-                finish();
-            }
-        });
-        backPressDialog.show();
-    }
-
     //当页面重新进入主界面读取用户信息
     @Override
     protected void onResume() {
         super.onResume();
+    }
+    //返回按钮监听,回到桌面
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(intent);
     }
 
     private Fragment preFragment;

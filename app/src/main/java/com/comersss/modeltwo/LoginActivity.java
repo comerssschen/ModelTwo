@@ -132,6 +132,7 @@ public class LoginActivity extends BaseActivity {
                                 spInsance.put("token", EncodeUtils.urlEncode(result.getData()));
                                 startActivity(new Intent(LoginActivity.this,
                                         MainActivity.class));
+                                finish();
                             } else {
                                 ToastUtils.showShort(result.getMessage());
                             }

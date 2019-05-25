@@ -21,7 +21,9 @@
             android:name="design_height_in_dp"
             android:value="384" />
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTask">
 
         </activity>
 

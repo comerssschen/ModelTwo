@@ -48,12 +48,6 @@ public class BackPressDialog extends Dialog {
         this.contentStr = contentStr;
     }
 
-    public BackPressDialog(Context context) {
-        super(context);
-        this.mContext = context;
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.ObjectUtils;
-import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.comersss.modeltwo.EditTextUtils;
 import com.comersss.modeltwo.Listener.BaseResultLitener;
@@ -30,7 +29,6 @@ import com.comersss.modeltwo.dialog.home.SucessDialog;
 import com.tencent.wxpayface.WxPayFace;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,9 +89,7 @@ public class HomeFragment extends BaseFragment {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             payMoneyDialog.dismiss();
-            if (ObjectUtils.isEmpty(sucessDialog)) {
-                sucessDialog = new SucessDialog(mContext, "收款金额：" + paymoney + "元", "收款成功");
-            }
+            sucessDialog = new SucessDialog(mContext, "收款金额：" + paymoney + "元", "收款成功");
             if (!sucessDialog.isShowing()) {
                 sucessDialog.show();
             }
@@ -234,7 +230,6 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void scanpay() {
-
         payMoneyDialog = new PayMoneyDialog(getContext(), "刷脸", paymoney + "元", "请刷脸收款");
         payMoneyDialog.setOnOkClickListener(new PayMoneyDialog.OnOkClickListener() {
             @Override
@@ -254,8 +249,6 @@ public class HomeFragment extends BaseFragment {
                 });
             }
         });
-//
-        payMoneyDialog.setContent(paymoney + "元");
         payMoneyDialog.show();
     }
 
@@ -266,9 +259,7 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void sucess(String serverRetData) {
                 qrCodePayDialog.dismiss();
-                if (ObjectUtils.isEmpty(sucessDialog)) {
-                    sucessDialog = new SucessDialog(mContext, "收款金额：" + paymoney + "元", "收款成功");
-                }
+                sucessDialog = new SucessDialog(mContext, "收款金额：" + paymoney + "元", "收款成功");
                 if (!sucessDialog.isShowing()) {
                     sucessDialog.show();
                 }
@@ -291,14 +282,11 @@ public class HomeFragment extends BaseFragment {
         qrCodePayDialog.setOnOkClickListener(new QrCodePayDialog.OnOkClickListener() {
             @Override
             public void onResult(String result) {
-
                 NetUtil.getInstance().getQrCodePay(result, money, memberid, new BaseResultLitener() {
                     @Override
                     public void sucess(String serverRetData) {
                         qrCodePayDialog.dismiss();
-                        if (ObjectUtils.isEmpty(sucessDialog)) {
-                            sucessDialog = new SucessDialog(mContext, "收款金额：" + paymoney + "元", "收款成功");
-                        }
+                        sucessDialog = new SucessDialog(mContext, "收款金额：" + paymoney + "元", "收款成功");
                         if (!sucessDialog.isShowing()) {
                             sucessDialog.show();
                         }
