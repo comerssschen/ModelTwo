@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+</head>
+<body>
+<button class="openId">调用openId</button>
+<button class="Token">调用Token</button>
+<button class="Scan">扫脸支付</button>
+<script>
+
+        $(".Scan").click(function(){
+            tokenGetFunc.FacePay(1);
+        })
+        $(".openId").click(function(){
+            tokenGetFunc.getOpenId();
+        })
+        $(".Token").click(function(){
+            alert("result is" + tokenGetFunc.GetToken());
+        })
+
+       function openIdResult(value){
+            alert(value);
+       }
+       function facepayResult(value){
+            alert(value);
+       }
+
+
+</script>
+</body>
+</html>

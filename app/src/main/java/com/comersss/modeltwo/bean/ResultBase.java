@@ -17,6 +17,13 @@ public class ResultBase {
     private int Code;
     private Object Data;
 
+    public ResultBase(String message, boolean success, int code, Object data) {
+        Message = message;
+        Success = success;
+        Code = code;
+        Data = data;
+    }
+
     public Object getData() {
         return Data;
     }

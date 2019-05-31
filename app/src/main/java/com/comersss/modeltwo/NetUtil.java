@@ -177,7 +177,7 @@ public class NetUtil {
                                 WxPayFace.getInstance().updateWxpayfacePayResult(localHashMap, new IWxPayfaceCallback() {
                                     public void response(Map paramMap) throws RemoteException {
                                         Log.i(TAG, "paramMap" + paramMap);
-                                        baseResultLitener.sucess("");
+                                        baseResultLitener.sucess(paramMap.toString());
                                     }
                                 });
                             } else {

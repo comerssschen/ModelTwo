@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.comersss.modeltwo.Listener.WebAppInterface;
 import com.comersss.modeltwo.R;
+import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
@@ -39,7 +40,7 @@ public class SettingFragment extends BaseFragment {
     protected void initView(View mChildContentView, Bundle savedInstanceState) {
         mWebView = mChildContentView.findViewById(R.id.webview);
         com.tencent.smtt.sdk.WebSettings webSettings = mWebView.getSettings();
-        mWebView.addJavascriptInterface(new WebAppInterface(), "tokenGetFunc");
+        mWebView.addJavascriptInterface(new WebAppInterface(mWebView), "tokenGetFunc");
 
         mWebView.setWebChromeClient(new WebChromeClient());
         webSettings.setAllowFileAccess(true);
@@ -47,7 +48,7 @@ public class SettingFragment extends BaseFragment {
         webSettings.setGeolocationEnabled(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);//设置js可以直接打开窗口，如window.open()，默认为false
         webSettings.setJavaScriptEnabled(true);//是否允许执行js，默认为false。设置true时，会提醒可能造成XSS漏洞
-        webSettings.setSupportZoom(true);//是否可以缩放，默认true
+        webSettings.setSupportZoom(false);//是否可以缩放，默认true
         webSettings.setBuiltInZoomControls(true);//是否显示缩放按钮，默认false
         webSettings.setUseWideViewPort(true);//设置此属性，可任意比例缩放。大视图模式
         webSettings.setLoadWithOverviewMode(true);//和setUseWideViewPort(true)一起解决网页自适应问题
@@ -57,7 +58,7 @@ public class SettingFragment extends BaseFragment {
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         mWebView.requestFocus();
         mWebView.loadUrl("http://api.pay.360yunpay.com/html/SetUp.html");
-
+//        mWebView.loadUrl("file:///android_asset/help.html");
         //对webview的返回键进行监听
         mWebView.setOnKeyListener(new View.OnKeyListener() {
             @Override
