@@ -20,6 +20,7 @@ import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.comersss.modeltwo.bean.ResultLogin;
+import com.comersss.modeltwo.dialog.home.BackPressDialog;
 import com.comersss.modeltwo.dialog.home.LoadingDialog;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
@@ -39,6 +40,7 @@ public class LoginActivity extends BaseActivity {
     private SPUtils spInsance;
     private LoadingDialog loadingDialog;
     private boolean isHidden;
+    private BackPressDialog backPressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +61,21 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initView() {
+        ImageView loginout = findViewById(R.id.iv_login_out);
+        loginout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backPressDialog = new BackPressDialog(LoginActivity.this, "退出", "确认退出吗？");
+                backPressDialog.setOnOkClickListener(new BackPressDialog.OnOkClickListener() {
+                    @Override
+                    public void onOkClick() {
+                        backPressDialog.dismiss();
+                        finish();
+                    }
+                });
+                backPressDialog.show();
+            }
+        });
         etLoinname = findViewById(R.id.et_loinname);
         etPassword = findViewById(R.id.et_password);
         ivEye = findViewById(R.id.iv_eye);

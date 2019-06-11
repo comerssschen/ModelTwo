@@ -4,7 +4,6 @@ package com.comersss.modeltwo.dialog.member;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -62,6 +61,13 @@ public class MemberRechargeDialog extends Dialog {
     }
 
     private void initView() {
+        TextView right_close = findViewById(R.id.right_close);
+        right_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         et_code = findViewById(R.id.et_code);
         et_money = findViewById(R.id.et_money);
         tv_content = findViewById(R.id.tv_content);
@@ -115,7 +121,7 @@ public class MemberRechargeDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 if (verifyMoney()) {
-                    NetUtil.getInstance().getOrder(1,money, memberid, new BaseResultLitener() {
+                    NetUtil.getInstance().getOrder(1, money, memberid, new BaseResultLitener() {
                         @Override
                         public void sucess(String serverRetData) {
                             dismiss();

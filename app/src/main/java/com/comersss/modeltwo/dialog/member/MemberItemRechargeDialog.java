@@ -66,7 +66,13 @@ public class MemberItemRechargeDialog extends Dialog {
         TextView tv_content = findViewById(R.id.tv_content);
         tv_content.setText("姓名： " + memberBean.getName() + "等级：" + memberBean.getMemberLevelName() + "余额：" + memberBean.getBalance() + "元");
         et_money = findViewById(R.id.et_money);
-
+        TextView right_close = findViewById(R.id.right_close);
+        right_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         LinearLayout ll_scan = findViewById(R.id.ll_scan);
         LinearLayout ll_qrcode = findViewById(R.id.ll_qrcode);
 

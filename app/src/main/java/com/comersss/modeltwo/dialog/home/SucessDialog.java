@@ -67,7 +67,13 @@ public class SucessDialog extends Dialog {
         setContentView(R.layout.sucess_dialog);
         Window dialogWindow = getWindow();
         dialogWindow.setGravity(Gravity.CENTER);
-
+        TextView right_close = findViewById(R.id.right_close);
+        right_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         tvState = findViewById(R.id.tv_state);
         tvTitle = findViewById(R.id.tv_title);
         tvContent = findViewById(R.id.tv_content);

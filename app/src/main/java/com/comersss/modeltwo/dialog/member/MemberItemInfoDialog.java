@@ -48,6 +48,13 @@ public class MemberItemInfoDialog extends Dialog {
     }
 
     private void initView() {
+        TextView right_close = findViewById(R.id.right_close);
+        right_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         TextView tv_dongjie = findViewById(R.id.tv_dongjie);
         TextView tv_jiedong = findViewById(R.id.tv_jiedong);
         TextView tv_update = findViewById(R.id.tv_update);

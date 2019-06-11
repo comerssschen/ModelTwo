@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.comersss.modeltwo.Listener.MemberResultLitener;
-import com.comersss.modeltwo.Listener.BaseResultLitener;
 import com.comersss.modeltwo.Listener.RefreshLitener;
 import com.comersss.modeltwo.Listener.TopCountLitener;
 import com.comersss.modeltwo.NetUtil;
@@ -28,7 +27,6 @@ import com.comersss.modeltwo.dialog.member.MemberAddDialog;
 import com.comersss.modeltwo.dialog.member.MemberItemInfoDialog;
 import com.comersss.modeltwo.dialog.member.MemberItemRechargeDialog;
 import com.comersss.modeltwo.dialog.member.MemberRechargeDialog;
-import com.comersss.modeltwo.dialog.member.MemberScreenDialog;
 
 import java.util.List;
 

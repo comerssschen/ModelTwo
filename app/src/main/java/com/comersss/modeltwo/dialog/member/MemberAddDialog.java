@@ -22,14 +22,12 @@ import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.comersss.modeltwo.Constant;
 import com.comersss.modeltwo.Listener.GetOpenIdLitener;
-import com.comersss.modeltwo.Listener.MemberLevelLitener;
 import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
 import com.comersss.modeltwo.adapter.LevelAdapter;
 import com.comersss.modeltwo.adapter.SpinnerAdapter;
 import com.comersss.modeltwo.adapter.SpinnerThreeAdapter;
 import com.comersss.modeltwo.adapter.SpinnerTwoAdapter;
-import com.comersss.modeltwo.bean.MemberLevelResult;
 import com.comersss.modeltwo.bean.MemberListResult;
 import com.comersss.modeltwo.bean.ProvinceBean;
 import com.comersss.modeltwo.bean.ResultBase;
@@ -131,6 +129,13 @@ public class MemberAddDialog extends Dialog {
     }
 
     private void initView() {
+        TextView right_close = findViewById(R.id.right_close);
+        right_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         TextView tv_scan = findViewById(R.id.tv_scan);
         tv_scan.setOnClickListener(new View.OnClickListener() {
             @Override

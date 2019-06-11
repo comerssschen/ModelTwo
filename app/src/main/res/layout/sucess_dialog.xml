@@ -5,16 +5,34 @@
     android:background="@drawable/dialog_bg_shape"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_title"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="26dp"
-        android:background="@color/header"
-        android:gravity="center_vertical"
-        android:paddingLeft="10dp"
-        android:text="刷脸"
-        android:textColor="@color/white"
-        android:textSize="12sp" />
+        android:background="@color/header">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:text="刷脸"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/right_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingRight="10dp"
+            android:text="X"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+    </LinearLayout>
 
     <ImageView
         android:layout_width="56dp"

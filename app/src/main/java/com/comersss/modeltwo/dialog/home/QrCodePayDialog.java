@@ -8,8 +8,8 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -109,6 +109,13 @@ public class QrCodePayDialog extends Dialog {
                 if (!TextUtils.isEmpty(etScan.getText())) {
                     handler.postDelayed(delayRun, 100);
                 }
+            }
+        });
+        TextView right_close = findViewById(R.id.right_close);
+        right_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
             }
         });
         tvTitle = findViewById(R.id.tv_title);

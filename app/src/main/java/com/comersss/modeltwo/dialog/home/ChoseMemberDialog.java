@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.comersss.modeltwo.Listener.BaseResultLitener;
 import com.comersss.modeltwo.Listener.MemberInfoLitener;
 import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
@@ -53,7 +52,13 @@ public class ChoseMemberDialog extends Dialog {
         setContentView(R.layout.chose_member_dialog);
         Window dialogWindow = getWindow();
         dialogWindow.setGravity(Gravity.CENTER);
-
+        TextView right_close = findViewById(R.id.right_close);
+        right_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         tv_content = findViewById(R.id.tv_content);
         TextView tv_parm1 = findViewById(R.id.tv_parm1);
         TextView tv_parm2 = findViewById(R.id.tv_parm2);

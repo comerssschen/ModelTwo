@@ -81,7 +81,13 @@ public class PayMoneyDialog extends Dialog {
         setContentView(R.layout.paymony_dialog);
         Window dialogWindow = getWindow();
         dialogWindow.setGravity(Gravity.CENTER);
-
+        TextView right_close = findViewById(R.id.right_close);
+        right_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         tvTitle = findViewById(R.id.tv_title);
         tvContent = findViewById(R.id.tv_content);
         tvButton = findViewById(R.id.tv_button);

@@ -4,7 +4,6 @@ package com.comersss.modeltwo.dialog.home;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -59,7 +58,13 @@ public class RefundDialog extends Dialog {
         setContentView(R.layout.refund_dialog);
         Window dialogWindow = getWindow();
         dialogWindow.setGravity(Gravity.CENTER);
-
+        TextView right_close = findViewById(R.id.right_close);
+        right_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         TextView tv_content = findViewById(R.id.tv_content);
         TextView tv_ok = findViewById(R.id.tv_ok);
 
