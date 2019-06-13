@@ -3,22 +3,22 @@ package com.comersss.modeltwo.bean;
 public class QrCodePayResult {
 
     /**
-     * Data : WX00025201905242157552783432
+     * Data : {"out_trade_no":"WX00001201906130940178637161","trade_status":6}
      * Message :
-     * Success : true
+     * Success : false
      * Code : 0
      */
 
-    private String Data;
+    private DataBean Data;
     private String Message;
     private boolean Success;
     private int Code;
 
-    public String getData() {
+    public DataBean getData() {
         return Data;
     }
 
-    public void setData(String Data) {
+    public void setData(DataBean Data) {
         this.Data = Data;
     }
 
@@ -44,5 +44,31 @@ public class QrCodePayResult {
 
     public void setCode(int Code) {
         this.Code = Code;
+    }
+
+    public static class DataBean {
+        /**
+         * out_trade_no : WX00001201906130940178637161
+         * trade_status : 6
+         */
+
+        private String out_trade_no;
+        private int trade_status;
+
+        public String getOut_trade_no() {
+            return out_trade_no;
+        }
+
+        public void setOut_trade_no(String out_trade_no) {
+            this.out_trade_no = out_trade_no;
+        }
+
+        public int getTrade_status() {
+            return trade_status;
+        }
+
+        public void setTrade_status(int trade_status) {
+            this.trade_status = trade_status;
+        }
     }
 }

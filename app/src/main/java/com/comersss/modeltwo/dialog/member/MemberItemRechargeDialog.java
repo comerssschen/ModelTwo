@@ -161,12 +161,12 @@ public class MemberItemRechargeDialog extends Dialog {
     }
 
     private void showSucessDialog(String money) {
-        SucessDialog dialog = new SucessDialog(mContext, "充值金额：" + money + "元", "充值成功");
+        SucessDialog dialog = new SucessDialog(mContext, "充值", "充值金额：" + money + "元", "充值成功");
         dialog.show();
     }
 
     private void showfailDialog() {
-        SucessDialog dialog = new SucessDialog(mContext, "", "充值失败");
+        SucessDialog dialog = new SucessDialog(mContext, "充值", "", "充值失败");
         dialog.show();
     }
 

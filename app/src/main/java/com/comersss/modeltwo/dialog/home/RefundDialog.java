@@ -126,12 +126,12 @@ public class RefundDialog extends Dialog {
     private void showSucessDialog(String money) {
         BigDecimal minMoney = new BigDecimal(money);
         money = minMoney.divide(new BigDecimal("100")).toString();
-        SucessDialog dialog = new SucessDialog(mContext, "退款金额：" + money + "元", "退款成功");
+        SucessDialog dialog = new SucessDialog(mContext, "退款", "退款金额：" + money + "元", "退款成功");
         dialog.show();
     }
 
     private void showfailDialog() {
-        SucessDialog dialog = new SucessDialog(mContext, "", "退款失败");
+        SucessDialog dialog = new SucessDialog(mContext, "退款", "", "退款失败");
         dialog.show();
     }
 

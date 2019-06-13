@@ -1,5 +1,9 @@
 package com.comersss.modeltwo;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
@@ -242,7 +246,7 @@ public class NetUtil {
     }
 
     //条码支付
-    public void getQrCodePay(String qrcode, String money, int memberId, final BaseResultLitener baseResultLitener) {
+    public void getQrCodePay(final String qrcode, final String money, int memberId, final BaseResultLitener baseResultLitener) {
         localHashMap = new HashMap<>();
         localHashMap.put("data1", money);
         localHashMap.put("data2", qrcode);
@@ -258,7 +262,17 @@ public class NetUtil {
                             if (resultGetOrder.isSuccess()) {
                                 baseResultLitener.sucess(body);
                             } else {
-                                ToastUtils.showShort(resultGetOrder.getMessage());
+                                if (resultGetOrder.getCode() == 0 && resultGetOrder.getData().getTrade_status() == 6) {
+                                    new Handler() {
+                                        @Override
+                                        public void handleMessage(Message msg) {
+                                            getQrCodePay(qrcode, money, 0, baseResultLitener);
+                                        }
+                                    }.sendEmptyMessageDelayed(1, 2000);
+
+                                } else {
+                                    ToastUtils.showShort(resultGetOrder.getMessage());
+                                }
                             }
 
                         } catch (Exception e) {

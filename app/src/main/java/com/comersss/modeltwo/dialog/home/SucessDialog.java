@@ -1,6 +1,5 @@
 package com.comersss.modeltwo.dialog.home;
 
-
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -25,18 +24,16 @@ public class SucessDialog extends Dialog {
     private TextView tvContent;
     private TextView tvClose;
     private String content;
+    private String title;
     private String stateStr;
     private TextView tvState;
 
-    public SucessDialog(Context context, String content, String stateStr) {
+    public SucessDialog(Context context,String title, String content, String stateStr) {
         super(context);
         this.context = context;
+        this.title = title;
         this.content = content;
         this.stateStr = stateStr;
-    }
-
-    public void setTitle(String title) {
-        tvTitle.setText(title);
     }
 
     public void setContent(String content) {
