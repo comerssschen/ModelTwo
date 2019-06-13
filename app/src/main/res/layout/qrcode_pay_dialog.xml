@@ -1,86 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="290dp"
     android:layout_height="260dp"
-    android:background="@drawable/dialog_bg_shape"
-    android:orientation="vertical">
+    android:background="@drawable/dialog_bg_shape">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="26dp"
-        android:background="@color/header">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:paddingLeft="10dp"
-            android:text="刷脸"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="26dp"
+            android:background="@color/header">
 
-        <TextView
-            android:id="@+id/right_close"
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:text="刷脸"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/right_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingRight="10dp"
+                android:text="X"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingRight="10dp"
-            android:text="X"
-            android:textColor="@color/white"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="65dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="收款金额"
+                android:textColor="@color/title_color"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:text="0元"
+                android:textColor="@color/title_color"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_image"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/qrcode_pay" />
+
+        <TextView
+            android:id="@+id/tv_button"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="29dp"
+            android:gravity="center"
+            android:text="请扫描客户收款码"
+            android:textColor="@color/title_color"
             android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/et_scan"
+            android:layout_width="1dp"
+            android:layout_height="1dp" />
+
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="65dp"
-        android:orientation="horizontal">
+    <FrameLayout
+        android:id="@+id/framelayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="收款金额"
-            android:textColor="@color/title_color"
-            android:textSize="16sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:alpha="0.8"
+            android:background="#000"
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:text="0元"
-            android:textColor="@color/title_color"
-            android:textSize="16sp" />
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="支付中..."
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
 
-    <ImageView
-        android:id="@+id/iv_image"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/qrcode_pay" />
-
-    <TextView
-        android:id="@+id/tv_button"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="29dp"
-        android:gravity="center"
-        android:text="请扫描客户收款码"
-        android:textColor="@color/title_color"
-        android:textSize="12sp" />
-
-    <EditText
-        android:id="@+id/et_scan"
-        android:layout_width="1dp"
-        android:layout_height="1dp" />
-
-</LinearLayout>
+    </FrameLayout>
+</RelativeLayout>

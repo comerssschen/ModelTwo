@@ -1,7 +1,6 @@
 package com.comersss.modeltwo.fragments;
 
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
@@ -15,31 +14,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.ObjectUtils;
-import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.comersss.modeltwo.Constant;
 import com.comersss.modeltwo.EditTextUtils;
 import com.comersss.modeltwo.Listener.BaseResultLitener;
 import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
 import com.comersss.modeltwo.bean.MemberResult;
-import com.comersss.modeltwo.bean.QrCodePayResult;
-import com.comersss.modeltwo.bean.ResultLogin;
 import com.comersss.modeltwo.dialog.home.BackPressDialog;
 import com.comersss.modeltwo.dialog.home.ChoseMemberDialog;
 import com.comersss.modeltwo.dialog.home.LoadingDialog;
 import com.comersss.modeltwo.dialog.home.PayMoneyDialog;
-import com.comersss.modeltwo.dialog.home.QrCodePayDialog;
+import com.comersss.modeltwo.dialog.home.ReQrCodePayDialog;
 import com.comersss.modeltwo.dialog.home.RefundDialog;
 import com.comersss.modeltwo.dialog.home.SucessDialog;
-import com.google.gson.Gson;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.model.Response;
 import com.tencent.wxpayface.WxPayFace;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,12 +65,11 @@ public class HomeFragment extends BaseFragment {
     private SucessDialog sucessDialog;
     private View cashFragmentView;
     private PayMoneyDialog payMoneyDialog;
-    private QrCodePayDialog qrCodePayDialog;
+    private ReQrCodePayDialog qrCodePayDialog;
     private int type = 0;
     private MemberResult.DataBean memberBean;
     private BackPressDialog backPressDialog;
     private LoadingDialog loadingDialog;
-    private CountDownTimer timer;
     private final static int PAY_SUCCESS = 200;
     private final static int PAY_FAIL = 300;
     private final static int SCANFACE = 100;
@@ -119,10 +108,6 @@ public class HomeFragment extends BaseFragment {
                 case PAY_FAIL:
                     if (!ObjectUtils.isEmpty(loadingDialog) && loadingDialog.isShowing()) {
                         loadingDialog.dismiss();
-                    }
-                    if (!ObjectUtils.isEmpty(timer)) {
-                        timer.cancel();
-                        timer = null;
                     }
                     break;
                 case SCANFACE:
@@ -320,85 +305,21 @@ public class HomeFragment extends BaseFragment {
 
     //扫码直接支付
     private void qrcode() {
-        qrCodePayDialog = new QrCodePayDialog(getContext(), "扫码", paymoney + "元", "请扫码收款");
-        qrCodePayDialog.setOnOkClickListener(new QrCodePayDialog.OnOkClickListener() {
+        qrCodePayDialog = new ReQrCodePayDialog(getActivity(), "扫码", paymoney + "元", money, "请扫码收款");
+        qrCodePayDialog.setOnOkClickListener(new ReQrCodePayDialog.OnOkClickListener() {
             @Override
-            public void onResult(String result) {
-                loadingDialog.show();
-                HashMap<Object, Object> localHashMap = new HashMap<>();
-                localHashMap.put("data1", money);
-                localHashMap.put("data2", "134933555640910644");
-                OkGo.<String>post(Constant.URL + Constant.posPrePay)
-                        .upJson(new Gson().toJson(localHashMap))
-                        .headers("Authorization", SPUtils.getInstance().getString("token", ""))
-                        .execute(new StringCallback() {
-                            @Override
-                            public void onSuccess(Response<String> response) {
-                                try {
-                                    String body = response.body();
-                                    final QrCodePayResult resultGetOrder = new Gson().fromJson(body, QrCodePayResult.class);
-                                    if (resultGetOrder.isSuccess()) {
-                                        Message message = new Message();
-                                        message.what = PAY_SUCCESS;
-                                        mHandler.sendMessage(message);
-                                    } else {
-                                        if (resultGetOrder.getCode() == 0 && resultGetOrder.getData().getTrade_status() == 6) {
-                                            timer = new CountDownTimer(60000, 1000) {
-                                                @Override
-                                                public void onTick(long millisUntilFinished) {
-                                                    //在计时器中轮询支付结果：每秒查询一次支付结果
-                                                    OkGo.<String>get(Constant.URL + Constant.OrderQuery + "?orderNum=" + resultGetOrder.getData().getOut_trade_no()).execute(new StringCallback() {
-                                                        @Override
-                                                        public void onSuccess(Response<String> response) {
-                                                            try {
-                                                                ResultLogin resultLogin = new Gson().fromJson(response.body(), ResultLogin.class);
-                                                                if (ObjectUtils.equals(resultLogin.getData(), "3")) {
-                                                                    Message message = new Message();
-                                                                    message.what = PAY_SUCCESS;
-                                                                    mHandler.sendMessage(message);
-                                                                } else if (ObjectUtils.equals(resultLogin.getData(), "5")) {
-                                                                    Message message = new Message();
-                                                                    message.what = PAY_FAIL;
-                                                                    mHandler.sendMessage(message);
-                                                                }
-                                                                Log.i("test", " response.body() = " + response.body());
-                                                            } catch (Exception e) {
-                                                                e.printStackTrace();
-                                                            }
-                                                        }
-                                                    });
-                                                }
-
-                                                @Override
-                                                public void onFinish() {
-                                                    //倒数到0时的操作，一般认为倒数到0仍未收到支付结果，则认为支付失败，页面跳转
-                                                    loadingDialog.dismiss();
-                                                    ToastUtils.showShort("支付失败，请重试");
-                                                }
-                                            };
-                                            timer.start();
-
-                                        } else {
-                                            loadingDialog.dismiss();
-                                            ToastUtils.showShort(resultGetOrder.getMessage());
-                                        }
-                                    }
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    loadingDialog.dismiss();
-                                    ToastUtils.showShort("支付失败，请重试");
-                                }
-                            }
-
-                            @Override
-                            public void onError(Response<String> response) {
-                                super.onError(response);
-                                ToastUtils.showShort("支付失败，请重试");
-                            }
-                        });
+            public void onsucess() {
+                Message message = new Message();
+                message.what = PAY_SUCCESS;
+                mHandler.sendMessage(message);
             }
 
+            @Override
+            public void onfaile() {
+                Message message = new Message();
+                message.what = PAY_FAIL;
+                mHandler.sendMessage(message);
+            }
         });
         if (!qrCodePayDialog.isShowing()) {
             qrCodePayDialog.setContent(paymoney + "元");

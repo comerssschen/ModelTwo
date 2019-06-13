@@ -173,8 +173,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
             public void response(Map paramMap) throws RemoteException {
                 Log.i("test", "paramMap = " + paramMap);
                 localHashMap = new HashMap<>();
-                localHashMap.put("data1", "10");
-                localHashMap.put("data2", paramMap.get("rawdata").toString());
+                localHashMap.put("data", paramMap.get("rawdata").toString());
                 Log.i("test", "map = " + localHashMap);
                 OkGo.<String>post(Constant.URL + Constant.WechatFaceAuth)
                         .upJson(new Gson().toJson(localHashMap))

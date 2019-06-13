@@ -79,10 +79,7 @@ public class NetUtil {
 
     //获取订单号 type 0消费  1充值
     public void getOrder(final int type, final String money, final int memberId, final BaseResultLitener baseResultLitener) {
-        localHashMap = new HashMap<>();
-        localHashMap.put("data", "10");
         OkGo.<String>post(Constant.URL + Constant.GenerateOrderNum)
-                .upJson(new Gson().toJson(localHashMap))
                 .headers("Authorization", SPUtils.getInstance().getString("token", ""))
                 .execute(new StringCallback() {
                     @Override
@@ -163,11 +160,10 @@ public class NetUtil {
 
     private void pay(String money, String outTratNum, String openid, String face_code, final BaseResultLitener baseResultLitener) {
         localHashMap = new HashMap<>();
-        localHashMap.put("data1", "10");
-        localHashMap.put("data2", money);
-        localHashMap.put("data3", outTratNum);
-        localHashMap.put("data4", openid);
-        localHashMap.put("data5", face_code);
+        localHashMap.put("data1", money);
+        localHashMap.put("data2", outTratNum);
+        localHashMap.put("data3", openid);
+        localHashMap.put("data4", face_code);
         OkGo.<String>post(Constant.URL + Constant.WechatFacePay)
                 .upJson(new Gson().toJson(localHashMap))
                 .headers("Authorization", SPUtils.getInstance().getString("token", ""))
