@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="290dp"
-    android:layout_height="260dp"
+    android:layout_width="260dp"
+    android:layout_height="180dp"
     android:background="@drawable/dialog_bg_shape">
 
     <LinearLayout
@@ -12,7 +12,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="26dp"
-            android:background="@color/header">
+            android:background="@drawable/dialog_header_bg_shape">
 
             <TextView
                 android:id="@+id/tv_title"
@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="65dp"
+            android:layout_marginTop="27dp"
             android:orientation="horizontal">
 
             <TextView
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:text="收款金额"
                 android:textColor="@color/title_color"
-                android:textSize="16sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/tv_content"
@@ -58,14 +58,14 @@
                 android:layout_marginLeft="30dp"
                 android:text="0元"
                 android:textColor="@color/title_color"
-                android:textSize="16sp" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 
         <ImageView
             android:id="@+id/iv_image"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="32dp"
+            android:layout_height="37dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:scaleType="fitXY"
@@ -76,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="29dp"
+            android:layout_marginTop="25dp"
             android:gravity="center"
             android:text="请扫描客户收款码"
             android:textColor="@color/title_color"

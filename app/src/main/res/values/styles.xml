@@ -1,9 +1,9 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/delay_orange</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/header</item>
+        <item name="colorPrimaryDark">@color/header</item>
+        <item name="colorAccent">@color/header</item>
         <!--<item name="android:windowIsTranslucent">true</item>-->
         <!--<item name="android:background">@drawable/qdyd</item>-->
         <item name="android:windowNoTitle">true</item>

@@ -3,6 +3,8 @@ package com.comersss.modeltwo.dialog.home;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -54,6 +56,7 @@ public class BackPressDialog extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.backpress_dialog);
         Window dialogWindow = getWindow();
+        dialogWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialogWindow.setGravity(Gravity.CENTER);
         TextView right_close = findViewById(R.id.right_close);
         right_close.setOnClickListener(new View.OnClickListener() {

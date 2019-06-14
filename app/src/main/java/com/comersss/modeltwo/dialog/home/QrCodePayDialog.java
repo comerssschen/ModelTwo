@@ -2,6 +2,8 @@ package com.comersss.modeltwo.dialog.home;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -86,6 +88,7 @@ public class QrCodePayDialog extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.qrcode_pay_dialog);
         Window dialogWindow = getWindow();
+        dialogWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialogWindow.setGravity(Gravity.CENTER);
         etScan = findViewById(R.id.et_scan);
         etScan.requestFocus();

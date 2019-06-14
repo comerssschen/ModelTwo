@@ -3,6 +3,8 @@ package com.comersss.modeltwo.dialog.member;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -63,6 +65,7 @@ public class MemberItemRechargeDialog extends Dialog {
         setContentView(R.layout.member_recharge_item_dialog);
         Window dialogWindow = getWindow();
         dialogWindow.setGravity(Gravity.CENTER);
+        dialogWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView tv_content = findViewById(R.id.tv_content);
         tv_content.setText("姓名： " + memberBean.getName() + "等级：" + memberBean.getMemberLevelName() + "余额：" + memberBean.getBalance() + "元");
         et_money = findViewById(R.id.et_money);

@@ -3,6 +3,8 @@ package com.comersss.modeltwo.dialog.member;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -40,6 +42,7 @@ public class MemberItemInfoDialog extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.member_info_item_dialog);
         Window dialogWindow = getWindow();
+        dialogWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialogWindow.setGravity(Gravity.CENTER);
         initView();
         setCancelable(true);

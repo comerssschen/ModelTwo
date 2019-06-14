@@ -15,17 +15,13 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.comersss.modeltwo.Listener.MemberLevelLitener;
-import com.comersss.modeltwo.Listener.TopCountLitener;
 import com.comersss.modeltwo.bean.ArgGetAuthInfo;
-import com.comersss.modeltwo.bean.ArgTopCountResult;
 import com.comersss.modeltwo.bean.CashResult;
 import com.comersss.modeltwo.bean.MemberLevelResult;
-import com.comersss.modeltwo.bean.ResultBase;
 import com.comersss.modeltwo.bean.StoreResult;
 import com.comersss.modeltwo.fragments.DataFragment;
 import com.comersss.modeltwo.fragments.HomeFragment;
 import com.comersss.modeltwo.fragments.SettingFragment;
-import com.comersss.modeltwo.fragments.MemberFragment;
 import com.comersss.modeltwo.dialog.home.BackPressDialog;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
@@ -49,7 +45,6 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     RadioGroup radiogroup;
     private ArrayList<Fragment> fragments;
     private HomeFragment homeFragment;
-    private MemberFragment memberFragment;
     private SettingFragment settingFragment;
     private DataFragment dataFragment;
     private BackPressDialog backPressDialog;
@@ -68,11 +63,11 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         radiogroup = findViewById(R.id.radiogroup);
         fragments = new ArrayList<>();
         homeFragment = new HomeFragment();
-        memberFragment = new MemberFragment();
+//        memberFragment = new MemberFragment();
         dataFragment = new DataFragment();
         settingFragment = new SettingFragment();
         fragments.add(homeFragment);
-        fragments.add(memberFragment);
+//        fragments.add(memberFragment);
         fragments.add(dataFragment);
         fragments.add(settingFragment);
 
@@ -90,6 +85,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                     public void onOkClick() {
                         backPressDialog.dismiss();
                         SPUtils.getInstance().clear();
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(intent);
                         finish();
                     }
                 });

@@ -2,6 +2,8 @@ package com.comersss.modeltwo.dialog.member;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -119,6 +121,7 @@ public class MemberAddDialog extends Dialog {
         Window dialogWindow = getWindow();
 //        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         dialogWindow.setGravity(Gravity.CENTER);
+        dialogWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //        Display display = ((Activity) mContext).getWindowManager().getDefaultDisplay();
 //        lp.width = (int) (display.getWidth() * 0.9); // 宽度
 //        dialogWindow.setAttributes(lp);

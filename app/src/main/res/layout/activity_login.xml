@@ -7,11 +7,10 @@
 
     <ImageView
         android:id="@+id/iv_login_out"
-        android:layout_width="8dp"
-        android:layout_height="8dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_alignParentRight="true"
-        android:layout_margin="10dp"
-        android:scaleType="fitXY"
+        android:padding="5dp"
         android:src="@drawable/loginout" />
 
     <LinearLayout

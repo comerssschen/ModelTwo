@@ -3,6 +3,8 @@ package com.comersss.modeltwo.dialog.member;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -53,6 +55,7 @@ public class MemberRechargeDialog extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.member_recharge_dialog);
         Window dialogWindow = getWindow();
+        dialogWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialogWindow.setGravity(Gravity.CENTER);
         initView();
         setCancelable(true);

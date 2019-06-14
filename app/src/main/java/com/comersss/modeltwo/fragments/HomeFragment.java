@@ -4,11 +4,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,7 +23,6 @@ import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
 import com.comersss.modeltwo.bean.MemberResult;
 import com.comersss.modeltwo.dialog.home.BackPressDialog;
-import com.comersss.modeltwo.dialog.home.ChoseMemberDialog;
 import com.comersss.modeltwo.dialog.home.LoadingDialog;
 import com.comersss.modeltwo.dialog.home.PayMoneyDialog;
 import com.comersss.modeltwo.dialog.home.ReQrCodePayDialog;
@@ -29,6 +30,7 @@ import com.comersss.modeltwo.dialog.home.RefundDialog;
 import com.comersss.modeltwo.dialog.home.SucessDialog;
 import com.tencent.wxpayface.WxPayFace;
 
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
 import butterknife.BindView;
@@ -47,10 +49,6 @@ public class HomeFragment extends BaseFragment {
     private static final String TAG = "test";
     @BindView(R.id.paymoney_edit)
     EditText paymoneyEdit;
-    @BindView(R.id.tv_member)
-    TextView tvMember;
-    @BindView(R.id.tv_content)
-    TextView tvContent;
     @BindView(R.id.tv_refund)
     TextView tvRefund;
     @BindView(R.id.ll_scan)
@@ -88,6 +86,22 @@ public class HomeFragment extends BaseFragment {
         unbinder = ButterKnife.bind(this, mChildContentView);
         EditTextUtils.setPriceEditText(paymoneyEdit);
         loadingDialog = new LoadingDialog(getActivity(), "支付中。。。");
+        if (android.os.Build.VERSION.SDK_INT <= 10) {//4.0以下 danielinbiti
+            paymoneyEdit.setInputType(InputType.TYPE_NULL);
+        } else {
+            getActivity().getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            try {
+                Class<EditText> cls = EditText.class;
+                Method setShowSoftInputOnFocus;
+                setShowSoftInputOnFocus = cls.getMethod("setShowSoftInputOnFocus",
+                        boolean.class);
+                setShowSoftInputOnFocus.setAccessible(true);
+                setShowSoftInputOnFocus.invoke(paymoneyEdit, false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private Handler mHandler = new Handler() {
@@ -103,7 +117,6 @@ public class HomeFragment extends BaseFragment {
                     }
                     paymoneyEdit.setText("");
                     memberid = 0;
-                    tvContent.setText("");
                     break;
                 case PAY_FAIL:
                     if (!ObjectUtils.isEmpty(loadingDialog) && loadingDialog.isShowing()) {
@@ -118,7 +131,6 @@ public class HomeFragment extends BaseFragment {
                     }
                     paymoneyEdit.setText("");
                     memberid = 0;
-                    tvContent.setText("");
                     break;
                 default:
                     break;
@@ -146,23 +158,11 @@ public class HomeFragment extends BaseFragment {
         WxPayFace.getInstance().releaseWxpayface(getContext());
     }
 
-    @OnClick({R.id.tv_member, R.id.tv_refund, R.id.ll_scan, R.id.ll_qrcode, R.id.soft_keyboard_btn_1, R.id.soft_keyboard_btn_2, R.id.soft_keyboard_btn_3, R.id.soft_keyboard_btn_4, R.id.soft_keyboard_btn_5, R.id.soft_keyboard_btn_6, R.id.soft_keyboard_btn_7, R.id.soft_keyboard_btn_8, R.id.soft_keyboard_btn_9, R.id.tv_point, R.id.soft_keyboard_btn_0, R.id.rl_delete})
+    @OnClick({R.id.tv_refund, R.id.ll_scan, R.id.ll_qrcode, R.id.soft_keyboard_btn_1, R.id.soft_keyboard_btn_2, R.id.soft_keyboard_btn_3, R.id.soft_keyboard_btn_4, R.id.soft_keyboard_btn_5, R.id.soft_keyboard_btn_6, R.id.soft_keyboard_btn_7, R.id.soft_keyboard_btn_8, R.id.soft_keyboard_btn_9, R.id.tv_point, R.id.soft_keyboard_btn_0, R.id.rl_delete})
     public void onViewClicked(View view) {
         Editable editable = paymoneyEdit.getText();
         int start = paymoneyEdit.getSelectionStart();
         switch (view.getId()) {
-            case R.id.tv_member:
-                ChoseMemberDialog choseMemberDialog = new ChoseMemberDialog(getContext());
-                choseMemberDialog.setOnOkClickListener(new ChoseMemberDialog.OnOkClickListener() {
-                    @Override
-                    public void onOkClick(MemberResult.DataBean dataBean) {
-                        memberBean = dataBean;
-                        memberid = dataBean.getId();
-                        tvContent.setText("姓名： " + dataBean.getName() + "  余额：" + dataBean.getBalance() + "元");
-                    }
-                });
-                choseMemberDialog.show();
-                break;
             case R.id.tv_refund:
                 RefundDialog refundDialog = new RefundDialog(getContext());
                 refundDialog.show();
@@ -292,7 +292,6 @@ public class HomeFragment extends BaseFragment {
                 }
                 paymoneyEdit.setText("");
                 memberid = 0;
-                tvContent.setText("");
             }
 
             @Override
