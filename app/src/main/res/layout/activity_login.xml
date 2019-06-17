@@ -99,8 +99,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:paddingHorizontal="10dp"
-                android:src="@drawable/eye"
-                android:visibility="gone" />
+                android:src="@drawable/eye" />
 
         </LinearLayout>
 

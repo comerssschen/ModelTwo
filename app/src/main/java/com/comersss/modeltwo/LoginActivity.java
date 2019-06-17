@@ -55,9 +55,6 @@ public class LoginActivity extends BaseActivity {
         spInsance = SPUtils.getInstance();
         etLoinname.setText(spInsance.getString("LoginName"));
         etPassword.setText(spInsance.getString("LoginPassword"));
-        if (!ObjectUtils.isEmpty(spInsance.getString("LoginPassword"))) {
-            ivEye.setVisibility(View.VISIBLE);
-        }
     }
 
     private void initView() {
@@ -79,26 +76,6 @@ public class LoginActivity extends BaseActivity {
         etLoinname = findViewById(R.id.et_loinname);
         etPassword = findViewById(R.id.et_password);
         ivEye = findViewById(R.id.iv_eye);
-        etPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!TextUtils.isEmpty(etPassword.getText().toString().trim())) {
-                    ivEye.setVisibility(View.VISIBLE);
-                } else {
-                    ivEye.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
         loadingDialog = new LoadingDialog(LoginActivity.this, "登录中。。。");
         ivEye.setOnClickListener(new View.OnClickListener() {
             @Override
