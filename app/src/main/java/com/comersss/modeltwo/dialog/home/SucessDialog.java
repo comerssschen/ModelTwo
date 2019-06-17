@@ -30,7 +30,7 @@ public class SucessDialog extends Dialog {
     private String stateStr;
     private TextView tvState;
 
-    public SucessDialog(Context context,String title, String content, String stateStr) {
+    public SucessDialog(Context context, String title, String content, String stateStr) {
         super(context);
         this.context = context;
         this.title = title;
@@ -79,6 +79,7 @@ public class SucessDialog extends Dialog {
         tvContent = findViewById(R.id.tv_content);
         tvClose = findViewById(R.id.tv_close);
         tvContent.setText(content);
+        tvTitle.setText(title);
         tvState.setText(stateStr);
         setCancelable(true);
         setCanceledOnTouchOutside(true);

@@ -22,7 +22,6 @@ import com.comersss.modeltwo.Listener.BaseResultLitener;
 import com.comersss.modeltwo.NetUtil;
 import com.comersss.modeltwo.R;
 import com.comersss.modeltwo.bean.MemberResult;
-import com.comersss.modeltwo.dialog.home.BackPressDialog;
 import com.comersss.modeltwo.dialog.home.LoadingDialog;
 import com.comersss.modeltwo.dialog.home.PayMoneyDialog;
 import com.comersss.modeltwo.dialog.home.ReQrCodePayDialog;
@@ -66,7 +65,6 @@ public class HomeFragment extends BaseFragment {
     private ReQrCodePayDialog qrCodePayDialog;
     private int type = 0;
     private MemberResult.DataBean memberBean;
-    private BackPressDialog backPressDialog;
     private LoadingDialog loadingDialog;
     private final static int PAY_SUCCESS = 200;
     private final static int PAY_FAIL = 300;
@@ -169,50 +167,12 @@ public class HomeFragment extends BaseFragment {
                 break;
             case R.id.ll_scan:
                 if (verifyMoney()) {
-                    if (memberid != 0 && type == 2 && !ObjectUtils.isEmpty(memberBean) && memberBean.getBalance() > Double.parseDouble(paymoney)) {
-                        backPressDialog = new BackPressDialog(getActivity(), "会员付款", "会员余额充足，确认要会员付款吗？");
-                        backPressDialog.setOnCancleClickListener(new BackPressDialog.OnCancleClickListener() {
-                            @Override
-                            public void onOkClick() {
-                                scanpay();
-                            }
-                        });
-                        backPressDialog.setOnOkClickListener(new BackPressDialog.OnOkClickListener() {
-                            @Override
-                            public void onOkClick() {
-                                backPressDialog.dismiss();
-                                consume();
-                            }
-                        });
-                        backPressDialog.show();
-                    } else {
-                        scanpay();
-                    }
-
+                    scanpay();
                 }
                 break;
             case R.id.ll_qrcode:
                 if (verifyMoney()) {
-                    if (memberid != 0 && type == 2 && !ObjectUtils.isEmpty(memberBean) && memberBean.getBalance() > Double.parseDouble(paymoney)) {
-                        backPressDialog = new BackPressDialog(getActivity(), "会员付款", "会员余额充足，确认要会员付款吗？");
-                        backPressDialog.setOnCancleClickListener(new BackPressDialog.OnCancleClickListener() {
-                            @Override
-                            public void onOkClick() {
-                                qrcode();
-                            }
-                        });
-                        backPressDialog.setOnOkClickListener(new BackPressDialog.OnOkClickListener() {
-                            @Override
-                            public void onOkClick() {
-                                backPressDialog.dismiss();
-                                consume();
-                            }
-                        });
-                        backPressDialog.show();
-                    } else {
-                        qrcode();
-                    }
-
+                    qrcode();
                 }
                 break;
 
@@ -278,28 +238,6 @@ public class HomeFragment extends BaseFragment {
             }
         });
         payMoneyDialog.show();
-    }
-
-    //会员支付
-    private void consume() {
-        NetUtil.getInstance().Consume(memberid, money, "", "", "", "", new BaseResultLitener() {
-            @Override
-            public void sucess(String serverRetData) {
-                qrCodePayDialog.dismiss();
-                sucessDialog = new SucessDialog(mContext, "收款", "收款金额：" + paymoney + "元", "收款成功");
-                if (!sucessDialog.isShowing()) {
-                    sucessDialog.show();
-                }
-                paymoneyEdit.setText("");
-                memberid = 0;
-            }
-
-            @Override
-            public void fail(String errMsg) {
-                ToastUtils.showShort(errMsg);
-            }
-        });
-
     }
 
     //扫码直接支付

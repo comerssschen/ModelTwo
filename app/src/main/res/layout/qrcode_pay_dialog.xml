@@ -21,7 +21,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:paddingLeft="10dp"
-                android:text="刷脸"
+                android:text="扫码"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
 
@@ -64,8 +64,8 @@
 
         <ImageView
             android:id="@+id/iv_image"
-            android:layout_width="32dp"
-            android:layout_height="37dp"
+            android:layout_width="38dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:scaleType="fitXY"
@@ -73,14 +73,14 @@
 
         <TextView
             android:id="@+id/tv_button"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="20dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="请扫描客户收款码"
+            android:text="请扫描客户条形码"
             android:textColor="@color/title_color"
-            android:textSize="12sp" />
+            android:textSize="10sp" />
 
         <EditText
             android:id="@+id/et_scan"

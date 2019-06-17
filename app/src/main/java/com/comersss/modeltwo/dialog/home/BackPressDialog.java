@@ -33,16 +33,6 @@ public class BackPressDialog extends Dialog {
         this.onOkClickListener = onOkClickListener;
     }
 
-    public interface OnCancleClickListener {
-        void onOkClick();
-    }
-
-    private OnCancleClickListener onCancleClickListener;
-
-    public void setOnCancleClickListener(OnCancleClickListener onOkClickListener) {
-        this.onCancleClickListener = onOkClickListener;
-    }
-
     public BackPressDialog(Context context, String titleStr, String contentStr) {
         super(context);
         this.mContext = context;
@@ -82,8 +72,7 @@ public class BackPressDialog extends Dialog {
         tvCancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onCancleClickListener != null)
-                    onCancleClickListener.onOkClick();
+                dismiss();
             }
         });
         setCancelable(true);

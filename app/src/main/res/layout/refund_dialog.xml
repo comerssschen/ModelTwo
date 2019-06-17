@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
         android:layout_marginTop="28dp"
-        android:drawableRight="@drawable/user"
+        android:drawableRight="@drawable/qrcode_pay"
         android:drawablePadding="27dp"
         android:gravity="center_vertical"
         android:text="请您扫描小票二维码"
