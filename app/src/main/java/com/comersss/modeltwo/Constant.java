@@ -11,8 +11,9 @@ import java.util.List;
  */
 public class Constant {
 
-
-    public static final String URL = "http://api.pay.360yunpay.com";//正式
+    public static final String URL = "http://api.pay.inxuetong.com";//正式
+    public static final String DateURL = "http://api.pay.inxuetong.com/html/Data.html";//正式
+    public static final String SettingURL = "http://api.pay.inxuetong.com/html/SetUp.html";//正式
     //    public static final String URL = "http://api.test.360yunpay.com";//测试
     public static String appid = "wx2b975c0ca94a6154";
     public static String mch_id = "1440771702";

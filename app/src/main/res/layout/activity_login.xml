@@ -26,8 +26,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="60dp"
-            android:text="妙星收银台"
-            android:textColor="@color/white" />
+            android:text="快  闪  雪  桐  收  银  台"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
 
         <LinearLayout
             android:layout_width="200dp"

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.comersss.modeltwo.Constant;
 import com.comersss.modeltwo.Listener.WebAppInterface;
 import com.comersss.modeltwo.R;
 import com.tencent.smtt.sdk.WebChromeClient;
@@ -31,7 +32,7 @@ public class DataFragment extends BaseFragment {
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-            mWebView.loadUrl("http://api.pay.360yunpay.com/html/Data.html");
+            mWebView.loadUrl(Constant.DateURL);
             Log.i("test", "切换到了cashfragment");
         }
     }
@@ -63,7 +64,7 @@ public class DataFragment extends BaseFragment {
         webSettings.setUserAgentString("User-Agent:Android");//设置用户代理，一般不用    (51广告图必须加上这一句)
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         mWebView.requestFocus();
-        mWebView.loadUrl("http://api.pay.360yunpay.com/html/Data.html");
+        mWebView.loadUrl(Constant.DateURL);
 
         //对webview的返回键进行监听
         mWebView.setOnKeyListener(new View.OnKeyListener() {
