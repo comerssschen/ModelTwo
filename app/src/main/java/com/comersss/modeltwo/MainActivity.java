@@ -14,10 +14,8 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.comersss.modeltwo.Listener.MemberLevelLitener;
 import com.comersss.modeltwo.bean.ArgGetAuthInfo;
 import com.comersss.modeltwo.bean.CashResult;
-import com.comersss.modeltwo.bean.MemberLevelResult;
 import com.comersss.modeltwo.bean.StoreResult;
 import com.comersss.modeltwo.fragments.DataFragment;
 import com.comersss.modeltwo.fragments.HomeFragment;
@@ -32,7 +30,6 @@ import com.tencent.wxpayface.WxPayFace;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -106,17 +103,19 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
             Log.i("test", ex + "");
         }
 
-        NetUtil.getInstance().QueryMemberLevels(new MemberLevelLitener() {
-            @Override
-            public void sucess(List<MemberLevelResult.DataBean> mberLevelList) {
-                Constant.mberLevelList = mberLevelList;
-            }
+        NetUtil.getInstance().GetSubMerchantId();
 
-            @Override
-            public void fail(String errMsg) {
-
-            }
-        });
+//        NetUtil.getInstance().QueryMemberLevels(new MemberLevelLitener() {
+//            @Override
+//            public void sucess(List<MemberLevelResult.DataBean> mberLevelList) {
+//                Constant.mberLevelList = mberLevelList;
+//            }
+//
+//            @Override
+//            public void fail(String errMsg) {
+//
+//            }
+//        });
         QueryCasherInfo();
         QueryStoreInfo();
     }

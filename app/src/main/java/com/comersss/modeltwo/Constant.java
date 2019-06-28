@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class Constant {
 
-    public static final String URL = "http://api.pay.inxuetong.com";//正式
+    public static final String URL = "http://api.pay.360yunpay.com";//正式
     public static final String DateURL = "http://api.pay.inxuetong.com/html/Data.html";//正式
     public static final String SettingURL = "http://api.pay.inxuetong.com/html/SetUp.html";//正式
     //    public static final String URL = "http://api.test.360yunpay.com";//测试
@@ -20,6 +20,9 @@ public class Constant {
     public static String sub_mch_id = "1531015161";
     public static AuthInfo authInfo = new AuthInfo();
     public static List<MemberLevelResult.DataBean> mberLevelList = new ArrayList<>();
+
+    //获取刷脸参数
+    public static final String GetSubMerchantId = "/api/PayApi/GetSubMerchantId";
 
     //会员消费
     public static final String Consume = "/api/MemberApi/Consume";

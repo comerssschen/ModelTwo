@@ -26,6 +26,7 @@ import com.comersss.modeltwo.bean.QrCodePayResult;
 import com.comersss.modeltwo.bean.ResultBase;
 import com.comersss.modeltwo.bean.ResultFacePay;
 import com.comersss.modeltwo.bean.ResultGetOrder;
+import com.comersss.modeltwo.bean.ResultLogin;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -55,6 +56,22 @@ public class NetUtil {
 
     private String TAG = "test";
     private HashMap<Object, Object> localHashMap;
+
+    //获取会员统计
+    public void GetSubMerchantId() {
+        OkGo.<String>get(Constant.URL + Constant.GetSubMerchantId).headers("Authorization", SPUtils.getInstance().getString("token", "")).execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                try {
+                    ResultBase resultBase = new Gson().fromJson(response.body(), ResultBase.class);
+                    Constant.sub_mch_id = resultBase.getData().toString();
+                    Log.i("test", " response.body() = " + response.body());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
     //获取微信openid
     public void getOpenId(final GetOpenIdLitener litener) {
